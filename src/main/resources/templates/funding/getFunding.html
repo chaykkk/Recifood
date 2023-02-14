@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body>
+<th:block layout:fragment="content">
+
+    <!-- Start Shop Detail  -->
+    <div class="shop-detail-box-main">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-5 col-lg-5 col-md-6">
+                    <div id="carousel-example-1" class="single-product-slider carousel slide" data-ride="carousel">
+                        <div class="carousel-inner" role="listbox">
+                            <div class="carousel-item active"> <img th:src="@{/image/}+ ${funding.filename}"> </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-7 col-lg-7 col-md-6">
+                    <div class="single-product-details">
+                        <center><h2 th:text="${funding.funding_name}"></h2><br></center>
+                        <center><h5 th:text="${funding.content}"></h5><br><br></center>
+                        <center><p class="available-stock"><span>펀딩기간 : </span><span th:text="${#dates.format(funding.startdate, 'yyyy-MM-dd')}"></span>
+                        <span>~</span>
+                        <span th:text="${#dates.format(funding.enddate, 'yyyy-MM-dd')}"></span><br></center>
+						<center><h4 th:text="${#numbers.formatInteger(funding.price,0,'COMMA')}"></h4><h4>원</h4><br></center>
+						<ul>
+							<li>
+								<div class="form-group quantity-box">
+									<label class="control-label">수량</label>
+									<input class="form-control" value="0" min="0" max="20" type="number"><br>
+									<a class="btn hvr-hover" data-fancybox-close="" href="#">구매하기</a>
+									<a class="btn hvr-hover" href="#"><i class="fas fa-heart"></i></a>
+								
+								</div>
+							</li>
+						</ul>
+						<div class="add-comp">
+								<a class="btn hvr-hover" th:href="@{/fundingList}">목록</a>
+						</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Cart -->
+
+    <a href="#" id="back-to-top" title="Back to top" style="display: none;">&uarr;</a>
+
+    <!-- ALL JS FILES -->
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <!-- ALL PLUGINS -->
+    <script src="js/jquery.superslides.min.js"></script>
+    <script src="js/bootstrap-select.js"></script>
+    <script src="js/inewsticker.js"></script>
+    <script src="js/bootsnav.js."></script>
+    <script src="js/images-loded.min.js"></script>
+    <script src="js/isotope.min.js"></script>
+    <script src="js/owl.carousel.min.js"></script>
+    <script src="js/baguetteBox.min.js"></script>
+    <script src="js/form-validator.min.js"></script>
+    <script src="js/contact-form-script.js"></script>
+    <script src="js/custom.js"></script>
+</th:block>
+</body>
+
+</html>

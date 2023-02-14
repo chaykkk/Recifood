@@ -1,0 +1,147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<head>
+   <!-- basic -->
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <!-- mobile metas -->
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+   <!-- site metas -->
+   <title>식자재 등록</title>
+   <meta name="keywords" content="">
+   <meta name="description" content="">
+   <meta name="author" content="">
+   <th:block layout:fragment="css">
+   <!-- bootstrap css -->
+   <link rel="stylesheet" type="text/css" href="/food/css/bootstrap.min.css">
+   <!-- style css -->
+   <link rel="stylesheet" type="text/css" href="/food/css/style.css">
+   <!-- Responsive-->
+   <link rel="stylesheet" href="/food/css/responsive.css">
+   <!-- fevicon -->
+   <link rel="icon" href="images/fevicon.png" type="image/gif" />
+   <!-- Scrollbar Custom CSS -->
+   <link rel="stylesheet" href="/food/css/jquery.mCustomScrollbar.min.css">
+   <!-- Tweaks for older IEs-->
+   <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+   <!-- fonts -->
+   <link href="https://fonts.googleapis.com/css?family=Poppins:400,700|Righteous&display=swap" rel="stylesheet">
+   <!-- owl stylesheets -->
+   <link rel="stylesheet" href="/food/css/owl.carousel.min.css">
+   <link rel="stylesheet" href="/food/css/owl.theme.default.min.css">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css"
+      media="screen">
+      </th:block>
+</head>
+
+<body>
+<th:block layout:fragment="content">
+<form th:action="@{/insertFood}" method="post">
+<center>
+<div class="contact_section layout_padding" style="background-color: white">
+      <div class="container">
+         <h1 class="contact_taital">식자재 등록</h1>
+         <div class="email_text">
+            <div class="form-group">
+            <select style="text-align: center" name="category" id="categorySelect" class="email-bt" onchange="categoryChange(this)">
+            	<option value="채소" selected>채소</option>
+            	<option value="정육">정육</option>
+            	<option value="유제품">유제품</option>
+            	<option value="수산">수산</option>
+            </select>
+            </div>
+            <br>
+            <div class="form-group">
+            <select style="text-align: center" name="name" id="nameSelect" class="email-bt">
+            	<option value="감자">감자</option>
+            	<option value="고구마">고구마</option>
+            	<option value="콩나물">콩나물</option>
+            	<option value="무">무</option>
+            	<option value="당근">당근</option>
+            	<option value="버섯">버섯</option>
+            	<option value="배추">배추</option>
+            	<option value="시금치">시금치</option>
+            	<option value="양파">양파</option>
+            	<option value="파">파</option>
+            	<option value="마늘">마늘</option>
+            	<option value="생강">생강</option>
+            	<option value="고추">고추</option>
+            	<option value="오이">오이</option>
+            	<option value="기타채소">기타채소</option>
+            	<option value="돼지">돼지</option>
+            	<option value="소">소</option>
+            	<option value="닭">닭/오리</option>
+            	<option value="기타정육">기타정육</option>
+            	<option value="우유">우유</option>
+            	<option value="치즈">치즈</option>
+            	<option value="버터">버터</option>
+            	<option value="기타유제품">기타유제품</option>
+            	<option value="생선">생선</option>
+            	<option value="오징어">오징어</option>
+            	<option value="조개류">조개류</option>
+            	<option value="새우">새우</option>
+            	<option value="해조류">해조류</option>
+            </select>
+            </div>
+            <div class="form-group">
+               <input style="text-align: center" type="date" class="email-bt" name="exp">
+            </div>
+            <div class="send_btn"><a><button type="submit">등록</button></a></div>
+            <div class="send_btn"><a th:href="@{/foodList}">취소</a></div>
+         </div>
+      </div>
+   </div>
+ </center>
+</form>
+</th:block>
+</body>
+  <th:block layout:fragment="script">
+<script type="text/javascript">
+	window.onload = function() {
+		var vegetable = ["감자", "고구마", "콩나물", "무", "당근", "버섯", "배추", "시금치", "양파",
+			"파", "마늘", "생강", "고추", "오이", "기타채소"];
+		
+		var target = document.getElementById("nameSelect");
+		
+		target.options.length = 0;
+		
+		for (x in vegetable ) {
+			var opt = document.createElement("option");
+			opt.value = vegetable[x];
+			opt.innerHTML = vegetable[x];
+			target.appendChild(opt);
+		}
+	};
+	
+	function categoryChange(e) {
+		var vegetable = ["감자", "고구마", "콩나물", "무", "당근", "버섯", "배추", "시금치", "양파",
+						"파", "마늘", "생강", "고추", "오이", "기타채소"];
+		var meat = ["돼지", "소", "닭/오리", "기타정육"];
+		var dairyFood = ["우유", "치즈", "버터", "기타유제품"];
+		var seaFood = ["생선", "오징어", "조개류", "새우", "해조류"];
+		var target = document.getElementById("nameSelect");
+		
+		if(e.value == "채소") var d = vegetable;
+		else if(e.value == "정육") var d = meat;
+		else if(e.value == "유제품") var d = dairyFood;
+		else if(e.value == "수산") var d = seaFood;
+		
+		target.options.length = 0;
+		
+		for (x in d ) {
+			var opt = document.createElement("option");
+			opt.value = d[x];
+			opt.innerHTML = d[x];
+			target.appendChild(opt);
+		}
+	}
+</script>
+</th:block>
+</html>

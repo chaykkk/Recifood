@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/default}">
+<!-- Basic -->
+
+<head>
+    <meta name="description" content="Foodeiblog Template">
+    <meta name="keywords" content="Foodeiblog, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>레시피 상세보기</title>
+ 
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,600,700,800,900&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Unna:400,700&display=swap" rel="stylesheet">
+
+<th:block layout:fragment="css">
+    <!-- Css Styles -->
+    <link rel="stylesheet" href="/getRecipe/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="/getRecipe/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="/getRecipe/css/elegant-icons.css" type="text/css">
+    <link rel="stylesheet" href="/getRecipe/css/owl.carousel.min.css" type="text/css">
+    <link rel="stylesheet" href="/getRecipe/css/slicknav.min.css" type="text/css">
+    <link rel="stylesheet" href="/getRecipe/css/style.css" type="text/css">
+</head>
+
+<body>
+ <th:block layout:fragment="content">
+    <!-- Single Post Section Begin -->
+    <section class="single-post spad">
+    <input th:type="hidden" id="recipe_seq" name="recipe_seq" th:value="${recipe.recipe_seq}">
+        <input th:type="hidden" id="username" name="username" th:if="${session.loginMember != null}" th:value="${session.loginMember.username}">
+        <input th:type="hidden" id="heart" name="heart" th:value="${heart}">
+        <center><div class="single-post__hero set-bg" style="height: 500px;"><img th:src="@{/image/}+ ${recipe.filename}"></div></center>
+        <div class="container">
+            <div class="row d-flex justify-content-center">
+                <div class="col-lg-8">
+                    <div class="single-post__title">
+                        <div class="single-post__title__meta">
+                            <h2 th:text="${recipe.recipe_name}"></h2>
+                        </div>
+                    </div>
+                     <!-- 좋아요 버튼 시작 -->
+                    <div class="single-post__social__item" th:id="heart_area" th:if="${heart.toString().equals('0')}">
+                        <ul>
+                            <li>
+                                <button class="btn hvr-hover" type="button" id="insertHeart" name="insertHeart" value="좋아요">
+                                    <i class="fa fa-heart-o"></i>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="single-post__social__item" th:id="heart_area1"  th:if="${heart.toString().equals('1')}">
+                        <ul>
+                            <li>
+                                <button class="btn hvr-hover" type="button" id="deleteHeart" name="deleteHeart" value="좋아요 취소">
+                                    <i class="fa fa-heart"></i>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- 좋아요 버튼 끝 -->
+                    <div class="single-post__top__text" style="white-space: pre;">
+                        <center><p th:text="${recipe.content}"></p></center>
+                    </div>
+                    <div class="single-post__recipe__details">
+                        <div class="single-post__recipe__details__option">
+                            <ul>
+                          		<li>
+                                    <h5><i class="fa-solid fa-bars"></i> 카테고리</h5>
+                                    &nbsp;&nbsp;<span th:text="${recipe.kind}"></span>
+                                </li>
+                                <li>
+                                    <h5><i class="fa fa-user-o"></i> 분량</h5>
+                                  	&nbsp;&nbsp;<span th:text="${recipe.amount}"></span><span>인분</span>
+                                </li>
+                                <li>
+                                    <h5><i class="fa fa-clock-o"></i> 요리시간</h5>
+                                    &nbsp;&nbsp;<span th:text="${recipe.cooking_time}"></span><span>분</span>
+                                </li>
+                                <li>
+                                    <h5><i class="fa-solid fa-seedling"></i> 난이도</h5>
+                                    &nbsp;&nbsp;<span th:text="${recipe.degree}"></span>
+                                </li>
+                                <li>
+                                    <h5><i class="fa fa-heart-o"></i> 추천수</h5>
+                                    &nbsp;&nbsp;<span th:text="${recipe.good}"></span><span>개</span>
+                                </li>
+                                </ul>
+                        </div>
+                        <div class="single-post__recipe__details__indegradients" style="white-space: pre;">
+                            <center><h5>재료</h5></center>
+                            <center><p th:text="${recipe.ingredient}"></p></center>
+                        </div>
+                        <div class="single-post__recipe__details__direction" style="white-space: pre;">
+                            <center><h5>조리순서</h5></center>
+                            <center><p th:text="${recipe.procedure}"></p></center>
+                        </div>
+                    </div>
+                    <!-- 댓글 목록 시작-->
+                    <div class="single-post__comment">
+                        <div class="widget__title">
+                            <h4 th:text="|댓글 (${cnt})|"></h4>
+                        </div>
+                        <div class="single-post__comment__item" th:each="rrp, state : ${recipeReply}">
+                            <div class="single-post__comment__item__text">
+                                <h5 th:text="${rrp.Member.username}"></h5>
+                                <span th:text="${rrp.content}"></span>
+                                <p th:text="${#dates.format(rrp.regdate, 'yyyy-MM-dd')}"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 댓글 목록 종료-->
+                    <div class="single-post__leave__comment">
+                        <form th:action="@{/insertRecipeReply}" method="GET">
+                        	<input type="hidden" name="recipe_seq" th:value="${recipe.recipe_seq}">
+                            <textarea placeholder="내용을 입력하세요" name="content"></textarea>
+                            <button type="submit" class="site-btn">작성하기</button><br><br>
+                             <center><div class="site-btn"><a th:href="@{/recipeList}">목록</a></div></center>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+   </th:block>
+</body>
+<th:block layout:fragment="script">
+ <!-- Js Plugins -->
+    <script src="/getRecipe/js/jquery-3.3.1.min.js"></script>
+    <script src="/getRecipe/js/bootstrap.min.js"></script>
+    <script src="/getRecipe/js/jquery.slicknav.js"></script>
+    <script src="/getRecipe/js/owl.carousel.min.js"></script>
+    <script src="/getRecipe/js/main.js"></script>
+    <script src="https://kit.fontawesome.com/f9c1d37a26.js" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            let heart = $("#heart").val();
+            const recipe_seq = $("#recipe_seq").val();
+            const username = $("#username").val();
+            var html = "";
+
+            console.log(username);
+            console.log(heart);
+          //  if (heart > 0) {
+                // 좋아요 취소
+                $('#deleteHeart').on('click', function () {
+                    $.ajax({
+                        url: '/heart',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            'recipe_seq': recipe_seq,
+                            'username': username
+                        }),
+                        success: function (data) {
+                            alert('레시피 좋아요 취소');
+                            console.log("data=", data);
+                            $("#heart").val(data);
+                            location.reload();
+                            // $("#heart_area").load(location.href+' #heart_area');
+                        }, error: function () {
+                            console.log('좋아요 취소 실패 다시 시도해주세요.')
+                        }
+                    });
+                });
+            //} else {
+                // 좋아요
+                $('#insertHeart').on('click', function () {
+                    $.ajax({
+                        url: '/heart',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            'recipe_seq': recipe_seq,
+                            'username': username
+                        }),
+                        success: function (data) {
+                            alert('레시피 좋아요');
+                            console.log("data=", data);
+                            $("#heart").val(data);
+                            location.reload();
+                            // $("#heart_area1").load(location.href+' #heart_area1');
+                        }, error: function () {
+                            console.log('좋아요 실패 다시 시도해주세요.')
+                        }
+                    });
+                });
+            //}
+
+            if(document.getElementById("username").value == "") {
+                alert("로그인 후 작성가능합니다.");
+                return false;
+            }
+            return true;
+        });
+    </script>
+    </th:block>
+</html>

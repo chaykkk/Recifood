@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}">
+<head>
+    <meta charset="UTF-8">
+    <title>밀키트 펀딩 목록</title>
+</head>
+
+<body>
+<th:block layout:fragment="content">
+<!-- Start All Title Box -->
+    <div class="all-title-box">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <h2>밀키트 펀딩 목록</h2>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End All Title Box -->
+
+    <!-- Start Cart  -->
+    <div class="cart-box-main">
+      <div class="container">
+      <h1 class="contact_taital" style="text-align: center">밀키트 펀딩 목록</h1>
+      <hr>
+     <div style="text-align: center; display: inline-block;">
+     <a th:href="@{/myFundingList}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;전체</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     <a th:href="@{/myFundingListKind(kind=한식)}">한식</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     <a th:href="@{/myFundingListKind(kind=양식)}">양식</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     <a th:href="@{/myFundingListKind(kind=디저트)}">디저트</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     </div>
+     <hr>
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="table-main table-responsive">
+              <table class="table">
+                <thead>
+                <tr th:align="center">
+                  <th>카테고리</th>
+                  <th>밀키트 펀딩명</th>
+                  <th>등록일</th>
+                  <th>진행상태</th>
+                  <th>수정</th>
+                  <th>삭제</th>
+                </tr>
+                </thead>
+                <tr th:each="funding, state : ${fundingList}">
+                  <td class="remove-pr">
+                    <p th:text="${funding.kind}" th:align="center"/>
+                  </td>
+                  <td class="remove-pr">
+                    <a th:href="@{/getMyFunding(funding_seq=${funding.funding_seq})}" th:text="${funding.funding_name}"></a>
+                  </td>
+                  <td class="remove-pr">
+                    <p th:text="${#dates.format(funding.regdate, 'yyyy-MM-dd')}" th:align="center"/>
+                  </td>
+                  <th:block th:if="${#dates.format(funding.startdate, 'yyyy-MM-dd')} > ${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd')}">
+                  	<!--<td class="remove-pr"><a th:text="${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd')}"></a></td>-->
+                   	<td class="remove-pr"><a th:text="펀딩시작전"></a></td>
+                   </th:block>
+                   <th:block th:if="${#dates.format(funding.startdate, 'yyyy-MM-dd')} <= ${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd')} and ${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd')} <= ${#dates.format(funding.enddate, 'yyyy-MM-dd')}">
+                   	<td class="remove-pr"><a th:text="펀딩진행중"></a></td>
+                   </th:block>
+                   <th:block th:if="${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd')} > ${#dates.format(funding.enddate, 'yyyy-MM-dd')}">
+                   	<td class="remove-pr"><a th:text="펀딩종료"></a></td>
+                   </th:block>
+                   <th:block th:if="${#dates.format(funding.startdate, 'yyyy-MM-dd')} > ${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd')}">
+                  	<!--<td class="remove-pr"><a th:text="${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd')}"></a></td>-->
+                   	<td class="remove-pr"><a th:href="@{/updateFunding(funding_seq=${funding.funding_seq}, recipe_seq=${funding.Recipe.recipe_seq})}"><button class="btn btn-theme" type="button" th:text="수정"></button></a></td>
+                   </th:block>
+                    <th:block th:if="${#dates.format(funding.startdate, 'yyyy-MM-dd')} <= ${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd')} and ${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd')} <= ${#dates.format(funding.enddate, 'yyyy-MM-dd')}">
+                   	<td class="remove-pr"><a th:text="수정불가능"></a></td>
+                   </th:block>
+                   <th:block th:if="${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd')} > ${#dates.format(funding.enddate, 'yyyy-MM-dd')}">
+                   	<td class="remove-pr"><a th:text="수정불가능"></a></td>
+                   </th:block>
+                  <td class="remove-pr">
+                    <a th:href="@{/deleteFunding(funding_seq=${funding.funding_seq})}" th:align="center"><i class="fas fa-times"></i></a>
+                  </td>
+                </tr>
+              </table>
+            </div><br><br>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+</th:block>
+</body>
+
+</html>

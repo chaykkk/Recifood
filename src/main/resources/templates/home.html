@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/default}">
+<!-- Basic -->
+<body>
+    <!-- Start Slider -->
+    <th:block layout:fragment="content">
+    <div id="slides-shop" class="cover-slides">
+        <ul class="slides-container">
+            <li class="text-center">
+                <img src="main/images/banner-01.jpg" alt="">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h1 class="m-b-20"><strong>Welcome To <br> Recifood</strong></h1>
+                            <p class="m-b-40"></p>
+                            <p><a class="btn hvr-hover" href="/recipeList">레시피 보러가기</a></p>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="text-center">
+                <img src="main/images/banner-03.jpg" alt="">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h1 class="m-b-20"><strong>Welcome To <br> Recifood</strong></h1>
+                            <p class="m-b-40"></p>
+                            <p><a class="btn hvr-hover" href="/fundingList">밀키트 보러가기</a></p>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <div class="slides-navigation">
+            <a href="#" class="next"><i class="fa fa-angle-right" aria-hidden="true"></i></a>
+            <a href="#" class="prev"><i class="fa fa-angle-left" aria-hidden="true"></i></a>
+        </div>
+    </div>
+    <!-- End Slider -->
+    <!-- Start Products  -->
+     <div class="latest-blog">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="title-all text-center">
+                        <h1>HOT 밀키트 펀딩</h1>
+                        </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-lg-4 col-xl-4" th:each="funding, state : ${funding}">
+                    <div class="blog-box">
+                        <div class="blog-img">
+                            <a th:href="@{/getFunding(funding_seq=${funding.funding_seq})}"><img class="img-fluid" th:src="@{/image/}+ ${funding.filename}"/></a>
+                        </div>
+                        <div class="blog-content">
+                            <div class="title-blog">
+                                <center><h3 th:text="${funding.funding_name}"></h3></center><br>
+                                <center><i class="fa-solid fa-coins" style="color: #b0b435;"></i>&nbsp;&nbsp;<p th:text="${#numbers.formatInteger(funding.price,0,'COMMA')}"></p><p>원</p></center>
+                                <center><i class="fa-solid fa-thumbtack" style="color: #b0b435;"></i>&nbsp;&nbsp;<p>펀딩기간 : </p>&nbsp;<p th:text="${#dates.format(funding.startdate, 'yyyy-MM-dd')}"></p>
+		                        <p>~</p>
+		                        <p th:text="${#dates.format(funding.enddate, 'yyyy-MM-dd')}"></p></center><br>
+		                        <center> <i class="fa-solid fa-eye" style="color: #b0b435;"></i>&nbsp;&nbsp;<p th:text="${funding.viewcount}"></p></center>
+                            	   
+                            </div>
+                           </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Products  -->
+    <!-- Start Blog  -->
+    <div class="latest-blog">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="title-all text-center">
+                        <h1>BEST 레시피</h1>
+                        </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-lg-4 col-xl-4" th:each="recipe, state : ${recipe}">
+                    <div class="blog-box">
+                        <div class="blog-img">
+                            <a th:href="@{/getRecipe(recipe_seq=${recipe.recipe_seq})}"><img class="img-fluid" th:src="@{/image/}+ ${recipe.filename}"/></a>
+                        </div>
+                        <div class="blog-content">
+                            <div class="title-blog">
+                                <center><h3 th:text="${recipe.recipe_name}"></h3></center><br>
+                               	<center><p th:text="${recipe.content}"></p></center><br>
+                                <center><i class="fa fa-user-o" style="color: #b0b435;"></i>&nbsp;&nbsp;<p th:text="${recipe.amount}"></p><p>인분</p></center>
+		                        <center><i class="fa-solid fa-seedling" style="color: #b0b435;"></i>&nbsp;&nbsp;<p>난이도 :</p>&nbsp;&nbsp;<p th:text="${recipe.degree}"></p></center>
+		                        <center><i class="fa fa-clock-o" style="color: #b0b435;"></i>&nbsp;&nbsp;<p>소요시간 :</p>&nbsp;&nbsp;<p th:text="${recipe.cooking_time}"></p><p>분</p></center><br>
+                            </div>
+                           </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Blog  -->
+
+    <a href="#" id="back-to-top" title="Back to top" style="display: none;">&uarr;</a>
+    </th:block>
+</body>
+     <th:block layout:fragment="script">
+     <script src="https://kit.fontawesome.com/f9c1d37a26.js" crossorigin="anonymous"></script>
+     </th:block>
+     
+</html>

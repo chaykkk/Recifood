@@ -1,0 +1,301 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<head>
+   <!-- basic -->
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <!-- mobile metas -->
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+   <!-- site metas -->
+   <title>식자재 수정</title>
+   <meta name="keywords" content="">
+   <meta name="description" content="">
+   <meta name="author" content="">
+   <th:block layout:fragment="css">
+   <!-- bootstrap css -->
+   <link rel="stylesheet" type="text/css" href="/food/css/bootstrap.min.css">
+   <!-- style css -->
+   <link rel="stylesheet" type="text/css" href="/food/css/style.css">
+   <!-- Responsive-->
+   <link rel="stylesheet" href="/food/css/responsive.css">
+   <!-- fevicon -->
+   <link rel="icon" href="images/fevicon.png" type="image/gif" />
+   <!-- Scrollbar Custom CSS -->
+   <link rel="stylesheet" href="/food/css/jquery.mCustomScrollbar.min.css">
+   <!-- Tweaks for older IEs-->
+   <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+   <!-- fonts -->
+   <link href="https://fonts.googleapis.com/css?family=Poppins:400,700|Righteous&display=swap" rel="stylesheet">
+   <!-- owl stylesheets -->
+   <link rel="stylesheet" href="/food/css/owl.carousel.min.css">
+   <link rel="stylesheet" href="/food/css/owl.theme.default.min.css">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css"
+      media="screen">
+      </th:block>
+</head>
+
+<body>
+<th:block layout:fragment="content">
+<form th:action="@{/updateFood(food_seq=${food.food_seq})}" method="post">
+<center>
+<div class="contact_section layout_padding" style="background-color: white">
+      <div class="container">
+         <h1 class="contact_taital">식자재 수정</h1>
+         <div class="email_text">
+            <div class="form-group">
+            <select style="text-align: center" name="category" id="categorySelect" class="email-bt" onchange="categoryChange(this)">
+            	<th:block th:if="${food.category == '채소'}">
+            	<option value="채소"  selected>채소</option>
+            	</th:block>
+            	<th:block th:unless="${food.category == '채소'}">
+            	<option value="채소">채소</option>
+            	</th:block>
+            	<th:block th:if="${food.category == '정육'}">
+            	<option value="정육"  selected>정육</option>
+            	</th:block>
+            	<th:block th:unless="${food.category == '정육'}">
+            	<option value="정육">정육</option>
+            	</th:block>
+            	<th:block th:if="${food.category == '유제품'}">
+            	<option value="유제품"  selected>유제품</option>
+            	</th:block>
+            	<th:block th:unless="${food.category == '유제품'}">
+            	<option value="유제품">유제품</option>
+            	</th:block>
+            	<th:block th:if="${food.category == '수산'}">
+            	<option value="수산"  selected>수산</option>
+            	</th:block>
+            	<th:block th:unless="${food.category == '수산'}">
+            	<option value="수산">수산</option>
+            	</th:block>
+            </select>
+            </div>
+            <br>
+            <div class="form-group">
+            <select style="text-align: center" name="name" id="nameSelect" class="email-bt">
+            	<th:block th:if="${food.category == '채소'}">
+	            	<th:block th:if="${food.name == '감자'}">
+	            	<option value="감자"  selected>감자</option>
+	            	</th:block>
+	            	<th:block th:unless="${food.name == '감자'}">
+	            	<option value="감자">감자</option>
+	            	</th:block>
+	            	<th:block th:if="${food.name == '고구마'}">
+	            	<option value="고구마"  selected>고구마</option>
+	            	</th:block>
+	            	<th:block th:unless="${food.name == '고구마'}">
+	            	<option value="고구마">고구마</option>
+	            	</th:block>
+	            	<th:block th:if="${food.name == '콩나물'}">
+	            	<option value="콩나물"  selected>콩나물</option>
+	            	</th:block>
+	            	<th:block th:unless="${food.name == '콩나물'}">
+	            	<option value="콩나물">콩나물</option>
+	            	</th:block>
+	            	<th:block th:if="${food.name == '무'}">
+	            	<option value="무"  selected>무</option>
+	            	</th:block>
+	            	<th:block th:unless="${food.name == '무'}">
+	            	<option value="무">무</option>
+	            	</th:block>
+	            	<th:block th:if="${food.name == '당근'}">
+	            	<option value="당근"  selected>당근</option>
+	            	</th:block>
+	            	<th:block th:unless="${food.name == '당근'}">
+	            	<option value="당근">당근</option>
+	            	</th:block>
+	            	<th:block th:if="${food.name == '버섯'}">
+	            	<option value="버섯"  selected>버섯</option>
+	            	</th:block>
+	            	<th:block th:unless="${food.name == '버섯'}">
+	            	<option value="버섯">버섯</option>
+	            	</th:block>
+	            	<th:block th:if="${food.name == '배추'}">
+	            	<option value="배추"  selected>배추</option>
+	            	</th:block>
+	            	<th:block th:unless="${food.name == '배추'}">
+	            	<option value="당근">배추</option>
+	            	</th:block>
+	            	<th:block th:if="${food.name == '시금치'}">
+	            	<option value="시금치"  selected>시금치</option>
+	            	</th:block>
+	            	<th:block th:unless="${food.name == '시금치'}">
+	            	<option value="시금치">시금치</option>
+	            	</th:block>
+	            	<th:block th:if="${food.name == '양파'}">
+	            	<option value="양파"  selected>양파</option>
+	            	</th:block>
+	            	<th:block th:unless="${food.name == '양파'}">
+	            	<option value="양파">양파</option>
+	            	</th:block>
+	            	<th:block th:if="${food.name == '파'}">
+	            	<option value="파"  selected>파</option>
+	            	</th:block>
+	            	<th:block th:unless="${food.name == '파'}">
+	            	<option value="파">파</option>
+	            	</th:block>
+	            	<th:block th:if="${food.name == '마늘'}">
+	            	<option value="마늘"  selected>마늘</option>
+	            	</th:block>
+	            	<th:block th:unless="${food.name == '마늘'}">
+	            	<option value="마늘">마늘</option>
+	            	</th:block>
+	            	<th:block th:if="${food.name == '생강'}">
+	            	<option value="생강"  selected>생강</option>
+	            	</th:block>
+	            	<th:block th:unless="${food.name == '생강'}">
+	            	<option value="생강">생강</option>
+	            	</th:block>
+	            	<th:block th:if="${food.name == '고추'}">
+	            	<option value="고추"  selected>고추</option>
+	            	</th:block>
+	            	<th:block th:unless="${food.name == '고추'}">
+	            	<option value="고추">고추</option>
+	            	</th:block>
+	            	<th:block th:if="${food.name == '오이'}">
+	            	<option value="오이"  selected>오이</option>
+	            	</th:block>
+	            	<th:block th:unless="${food.name == '오이'}">
+	            	<option value="오이">오이</option>
+	            	</th:block>
+	            	<th:block th:if="${food.name == '기타채소'}">
+	            	<option value="기타채소"  selected>기타채소</option>
+	            	</th:block>
+	            	<th:block th:unless="${food.name == '기타채소'}">
+	            	<option value="기타채소">기타채소</option>
+	            	</th:block>
+            	</th:block>
+            	<th:block th:if="${food.category == '정육'}">
+	           		<th:block th:if="${food.name == '돼지'}">
+	            	<option value="돼지"  selected>돼지</option>
+	            	</th:block>
+	            	<th:block th:unless="${food.name == '돼지'}">
+	            	<option value="돼지">돼지</option>
+	            	</th:block>
+	            	<th:block th:if="${food.name == '소'}">
+	            	<option value="소"  selected>소</option>
+	            	</th:block>
+	            	<th:block th:unless="${food.name == '소'}">
+	            	<option value="소">소</option>
+	            	</th:block>
+	            	<th:block th:if="${food.name == '닭/오리'}">
+	            	<option value="닭/오리"  selected>닭/오리</option>
+	            	</th:block>
+	            	<th:block th:unless="${food.name == '닭/오리'}">
+	            	<option value="닭/오리">닭/오리</option>
+	            	</th:block>
+	            	<th:block th:if="${food.name == '기타정육'}">
+	            	<option value="기타정육"  selected>기타정육</option>
+	            	</th:block>
+	            	<th:block th:unless="${food.name == '기타정육'}">
+	            	<option value="기타정육">기타정육</option>
+	            	</th:block>
+	            </th:block>
+	            <th:block th:if="${food.category == '유제품'}">
+	            	<th:block th:if="${food.name == '우유'}">
+	            	<option value="우유"  selected>우유</option>
+	            	</th:block>
+	            	<th:block th:unless="${food.name == '우유'}">
+	            	<option value="우유">우유</option>
+	            	</th:block>
+	            	<th:block th:if="${food.name == '치즈'}">
+	            	<option value="치즈"  selected>치즈</option>
+	            	</th:block>
+	            	<th:block th:unless="${food.name == '치즈'}">
+	            	<option value="치즈">치즈</option>
+	            	</th:block>
+	            	<th:block th:if="${food.name == '버터'}">
+	            	<option value="버터"  selected>버터</option>
+	            	</th:block>
+	            	<th:block th:unless="${food.name == '버터'}">
+	            	<option value="버터">버터</option>
+	            	</th:block>
+	            	<th:block th:if="${food.name == '기타유제품'}">
+	            	<option value="기타유제품"  selected>기타유제품</option>
+	            	</th:block>
+	            	<th:block th:unless="${food.name == '기타유제품'}">
+	            	<option value="기타유제품">기타유제품</option>
+	            	</th:block>
+	            </th:block>
+	            <th:block th:if="${food.category == '수산'}">
+	            	<th:block th:if="${food.name == '생선'}">
+	            	<option value="생선"  selected>생선</option>
+	            	</th:block>
+	            	<th:block th:unless="${food.name == '생선'}">
+	            	<option value="생선">생선</option>
+	            	</th:block>
+	            	<th:block th:if="${food.name == '오징어'}">
+	            	<option value="오징어"  selected>오징어</option>
+	            	</th:block>
+	            	<th:block th:unless="${food.name == '오징어'}">
+	            	<option value="오징어">오징어</option>
+	            	</th:block>
+	            	<th:block th:if="${food.name == '조개류'}">
+	            	<option value="조개류"  selected>조개류</option>
+	            	</th:block>
+	            	<th:block th:unless="${food.name == '조개류'}">
+	            	<option value="조개류">조개류</option>
+	            	</th:block>
+	            	<th:block th:if="${food.name == '새우'}">
+	            	<option value="새우"  selected>새우</option>
+	            	</th:block>
+	            	<th:block th:unless="${food.name == '새우'}">
+	            	<option value="새우">새우</option>
+	            	</th:block>
+	            	<th:block th:if="${food.name == '해조류'}">
+	            	<option value="해조류"  selected>해조류</option>
+	            	</th:block>
+	            	<th:block th:unless="${food.name == '해조류'}">
+	            	<option value="해조류">해조류</option>
+	            	</th:block>
+	            </th:block>
+            </select>
+            </div>
+            <div class="form-group">
+               <input style="text-align: center" type="date" class="email-bt" name="exp" th:value="${#dates.format(food.exp, 'yyyy-MM-dd')}">
+            </div>
+            <div class="send_btn"><a><button type="submit">수정</button></a></div>
+            <div class="send_btn"><a th:href="@{foodList}">취소</a></div>
+         </div>
+      </div>
+   </div>
+ </center>
+</form>
+</th:block>
+
+</body>
+ <th:block layout:fragment="script">
+<script type="text/javascript">
+
+	function categoryChange(e) {
+		var vegetable = ["감자", "고구마", "콩나물", "무", "당근", "버섯", "배추", "시금치", "양파",
+						"파", "마늘", "생강", "고추", "오이", "기타채소"];
+		var meat = ["돼지", "소", "닭/오리", "기타정육"];
+		var dairyFood = ["우유", "치즈", "버터", "기타유제품"];
+		var seaFood = ["생선", "오징어", "조개류", "새우", "해조류"];
+		var target = document.getElementById("nameSelect");
+		
+		if(e.value == "채소") var d = vegetable;
+		else if(e.value == "정육") var d = meat;
+		else if(e.value == "유제품") var d = dairyFood;
+		else if(e.value == "수산") var d = seaFood;
+		
+		target.options.length = 0;
+		
+		for (x in d ) {
+			var opt = document.createElement("option");
+			opt.value = d[x];
+			opt.innerHTML = d[x];
+			target.appendChild(opt);
+		}
+	}
+</script>
+</th:block>
+</html>

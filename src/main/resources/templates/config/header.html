@@ -1,0 +1,102 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="headerFragment">
+<head>
+    <meta charset="UTF-8">
+</head>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+        <!-- Mobile Metas -->
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Site Metas -->
+        <title>Recifood</title>
+        <meta name="keywords" content="">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <!-- Site Icons -->
+        <link rel="shortcut icon" href="main/images/favicon.ico" type="main/image/x-icon">
+        <link rel="apple-touch-icon" href="main/images/apple-touch-icon.png">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="main/css/bootstrap.min.css">
+        <!-- Site CSS -->
+        <link rel="stylesheet" href="main/css/style.css">
+        <!-- Responsive CSS -->
+        <link rel="stylesheet" href="main/css/responsive.css">
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="main/css/custom.css">
+        <!-- Tweaks for older IEs-->
+        <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+        <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+    </head>
+        <!-- Start Main Top -->
+        <header class="main-header">
+            <!-- Start Navigation -->
+            <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-default bootsnav">
+                <div class="container">
+                    <!-- Start Header Navigation -->
+                    <div class="navbar-header">
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-menu" aria-controls="navbars-rs-food" aria-expanded="false" aria-label="Toggle navigation">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <a class="navbar-brand" href="/home"><img src="main/images/logo.png" class="logo" alt=""></a>
+                    </div>
+                    <!-- End Header Navigation -->
+
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse" id="navbar-menu">
+                        <ul class="nav navbar-nav ml-auto" data-in="fadeInDown" data-out="fadeOutUp">
+                            <li class="nav-item active"><a class="nav-link" href="/home">Home</a></li>
+                            <li class="nav-item"><a class="nav-link" href="about.html">소개</a></li>
+                            <li class="dropdown">
+                                <a th:href="@{/recipeList}" class="nav-link dropdown-toggle arrow" data-toggle="dropdown">레시피</a>
+                                <ul class="dropdown-menu">
+                                    <li><a th:href="@{/recipeListKind(kind=한식)}">한식</a></li>
+                                    <li><a th:href="@{/recipeListKind(kind=양식)}">양식</a></li>
+                                    <li><a th:href="@{/recipeListKind(kind=디저트)}">디저트</a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a th:href="@{/fundingList}" class="nav-link dropdown-toggle arrow" data-toggle="dropdown">밀키트</a>
+                                <ul class="dropdown-menu">
+                                    <li><a th:href="@{/fundingListKind(kind=한식)}">한식</a></li>
+                                    <li><a th:href="@{/fundingListKind(kind=한식)}">양식</a></li>
+                                    <li><a th:href="@{/fundingListKind(kind=한식)}">디저트</a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="nav-link dropdown-toggle arrow" data-toggle="dropdown">게시판</a>
+                                <ul class="dropdown-menu">
+                                    <li><a th:href="@{/boardList(category=1)}">공지사항</a></li>
+                                    <li><a th:href="@{/boardList(category=2)}">자유게시판</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- /.navbar-collapse -->
+
+                    <!-- Start Atribute Navigation -->
+                   <div class="attr-nav">
+                    <ul>
+                        <a th:if="${session.loginMember == null}" href="/login">login</a>&nbsp;&nbsp;
+                        <a th:if="${session.loginMember == null}" href="/join">join</a>
+                        <a th:if="${session.loginMember != null}" href="/logout">logout</a>&nbsp;&nbsp;
+                            <span th:if="${session.loginMember != null}">
+                              <a href="/mypage">myPage</a> 
+                            </span>
+                    </ul>
+                </div>
+                    <!-- End Atribute Navigation -->
+                </div>
+            </nav>
+            <!-- End Navigation -->
+        </header>
+    </th:block>
+</html>

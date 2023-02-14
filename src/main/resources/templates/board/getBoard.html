@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<th:block layout:fragment="content">
+  <!-- Start All Title Box -->
+  <div class="all-title-box">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <h2>게시글</h2>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/home">Home</a></li>
+            <li class="breadcrumb-item active">Board</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- End All Title Box -->
+
+  <!-- Start Contact Us  -->
+  <div class="contact-box-main" th:align="center">
+    <div class="container">
+        <div class="col-lg-8 col-sm-12">
+          <div class="contact-form-right">
+            <h2>GET IN TOUCH</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed odio justo, ultrices ac nisl sed, lobortis porta elit. Fusce in metus ac ex venenatis ultricies at cursus mauris.</p>
+            <form id="contactForm">
+              <input name="boardSeq" type="hidden" th:value="${board.boardSeq}"/>
+              <input name="category" type="hidden" th:value="${board.category}"/>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <input type="text" th:value="${board.title}" class="form-control" id="title" name="title" readonly>
+                    <div class="help-block with-errors"></div>
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <p th:text="${board.member.username}" id="username" name="username" class="form-control"/>
+                    <div class="help-block with-errors"></div>
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <p th:text="${#dates.format(board.regdate, 'yyyy-MM-dd')}" class="form-control" id="regdate" name="ragdate"/>
+                    <div class="help-block with-errors"></div>
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <textarea th:text="${board.content}" class="form-control" id="content" name="content" rows="4" readonly></textarea>
+                    <div class="help-block with-errors"></div>
+                  </div>
+                  <div class="submit-button text-center">
+                    <button class="btn hvr-hover" type="button" th:onclick="|location.href='@{/updateBoard(boardSeq=${board.boardSeq})}'|">수정</button>
+                    <button class="btn hvr-hover" type="button" th:onclick="|location.href='@{/boardList}'|">뒤로</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+            <!-- 댓글 창 시작 -->
+            <section class="mb-5">
+              <div class="card bg-light">
+                <div class="card-body">
+                  <h2>Comment</h2><br>
+                  <!-- 댓글 -->
+                  <tr th:each="boardre:${boardReplyList}">
+                  <div class="d-flex mb-4">
+                    <div class="d-flex">
+                      <div class="ms-3" th:align="left">
+                        <div class="fw-bold"><a th:text="${boardre.member.username}"/>&nbsp;&nbsp;<small class="text-muted" th:text="${#dates.format(boardre.regdate, 'yyyy-MM-dd')}"></small></div>
+                        <p th:text="${boardre.content}"></p>
+                      </div>
+                    </div>
+                  </div>
+                  </tr>
+                  <tr th:if="${boardReplyList == null}">
+                    <p>댓글이 존재하지 않습니다.</p>
+                  </tr><br>
+                  <!-- 댓글 입력창-->
+                  <form class="mb-4">
+                    <input th:type="hidden" id="replyUsername" name="username" th:if="${session.loginMember != null}" th:value="${session.loginMember.username}">
+                    <input th:type="hidden" id="boardSeq" name="boardSeq" th:value="${board.boardSeq}">
+                    <div th:if="${session.member != null}">
+                    <textarea class="form-control" id="replyContent" rows="3" placeholder="댓글을 입력해 주세요."></textarea><br>
+                    <button class="btn hvr-hover" type="button" id="insertReply" name="insertReply">댓글등록</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </section>
+          <!-- 댓글창 끝 -->
+          </div>
+        </div>
+    </div>
+  </div>
+  <!-- End Cart -->
+</th:block>
+</body>
+<th:block layout:fragment="script">
+<!-- Js Plugins -->
+<script src="/getRecipe/js/jquery-3.3.1.min.js"></script>
+<script src="/getRecipe/js/bootstrap.min.js"></script>
+<script src="/getRecipe/js/jquery.slicknav.js"></script>
+<script src="/getRecipe/js/owl.carousel.min.js"></script>
+<script src="/getRecipe/js/main.js"></script>
+  <script type="text/javascript">
+
+    $(document).ready(function () { // 댓글 등록
+      const replyUsername = $("#replyUsername").val();
+      const boardSeq = $("#boardSeq").val();
+
+      console.log(boardSeq);
+      console.log(replyUsername);
+      $('#insertReply').on('click', function () {
+        $.ajax({
+          url: '/insertReply',
+          type: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify({
+              'boardSeq': boardSeq,
+              'replyUsername': replyUsername,
+              'replyContent': $('#replyContent').val()
+          }),
+          success: function (data) {
+            alert('댓글이 등록되었습니다.');
+            console.log("data=", data);
+            location.reload();
+          }, error: function () {
+            console.log('댓글 등록 실패 다시 시도해주세요.')
+          }
+        });
+      });
+    });
+  </script>
+</th:block>
+</html>

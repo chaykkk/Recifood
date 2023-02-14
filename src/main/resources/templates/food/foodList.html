@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}">
+<head>
+    <meta charset="UTF-8">
+    <title>식자재 목록</title>
+</head>
+
+<body>
+<th:block layout:fragment="content">
+<!-- Start All Title Box -->
+    <div class="all-title-box">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <h2>식자재 목록</h2>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End All Title Box -->
+
+    <!-- Start Cart  -->
+    <div class="cart-box-main">
+      <div class="container">
+      <h1 class="contact_taital" style="text-align: center">식자재 목록</h1>
+      <hr>
+     <div style="text-align: center; display: inline-block;">
+     <a th:href="@{/foodList}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;전체</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     <a th:href="@{/getFoodByCategory(category=채소)}">채소</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     <a th:href="@{/getFoodByCategory(category=정육)}">정육</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     <a th:href="@{/getFoodByCategory(category=유제품)}">유제품</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     <a th:href="@{/getFoodByCategory(category=수산)}">수산</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     
+     <a th:href="@{/getFoodDESC}">유통기한 : 최신순</a> / <a th:href="@{/getFoodASC}">오래된순</a> 
+     </div>
+     <hr>
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="table-main table-responsive">
+              <table class="table">
+                <thead>
+                <tr th:align="center">
+                  <th>카테고리</th>
+                  <th>식자재명</th>
+                  <th>유통기한</th>
+                  <th>삭제</th>
+                </tr>
+                </thead>
+                <tr th:each="food, state : ${foodList}">
+                  <td class="remove-pr">
+                    <p th:text="${food.category}" th:align="center"/>
+                  </td>
+                  <td class="remove-pr">
+                    <a th:href="@{/getFood(food_seq=${food.food_seq})}" th:text="${food.name}"></a>
+                  </td>
+                  <td class="total-pr">
+                    <p th:text="${#dates.format(food.exp, 'yyyy-MM-dd')}" th:align="center"/>
+                  </td>
+                  <td class="remove-pr">
+                    <a th:href="@{/deleteFood(food_seq=${food.food_seq})}" th:align="center"><i class="fas fa-times"></i></a>
+                  </td>
+                </tr>
+              </table>
+            </div><br><br>
+          </div>
+        </div>
+        <div class="row my-5">
+          <div class="col-lg-6 col-sm-6">
+            <div class="update-box">
+              <input value="등록" type="submit" th:onclick="|location.href='@{/insertFood}'|">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</th:block>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Join Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="login/css/style.css">
+
+</head>
+<body>
+<section class="ftco-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 text-center mb-5">
+                <h2 class="heading-section">Recifood 회원 정보</h2>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-5">
+            <div class="login-wrap p-4 p-md-5">
+                  <form class="login-form">
+                      <div class="form-group">
+                          <br>
+                          아이디 <input  type="text" class="form-control rounded-left" id="username" name="username" th:value="${member.username}" readonly>
+
+                          이름 <input type="text" class="form-control rounded-left" id="name" name="name" th:value="${member.name}" readonly>
+
+                          핸드폰번호 <input type="text" class="form-control rounded-left" id="phone" name="phone" th:value="${member.phone}" readonly>
+
+                          이메일 <input type="text" class="form-control rounded-left" id="email" name="email" th:value="${member.email}" readonly>
+
+                          우편번호 <input type="text" class="form-control rounded-left" id="zip_num" name="zip_num" th:value="${member.zip_num}" readonly>
+
+                          주소 <input type="text" class="form-control rounded-left" id="address" name="address" th:value="${address.addr1}" readonly>
+                          <input type="text" class="form-control rounded-left" id="detailAddress" name="address" th:value="${address.addr2}" readonly>
+                          <input type="text" class="form-control rounded-left" id="extraAddress" name="address" th:value="${address.addr3}" readonly>
+                            <br><br>
+                          <div class="form-group d-flex align-items-center">
+                              <div class="w-100 d-flex justify-content-end">
+                                  <button type="button" class="btn btn-primary rounded submit" th:onclick="|location.href='@{/updateMember(username=${member.username})}'|">수정</button>&nbsp;&nbsp;
+                                  <button type="button" class="btn btn-primary rounded submit" th:onclick="|location.href='@{/home}'|">취소</button>
+                              </div>
+                          </div>
+                      </div>
+                  </form>
+            </div>
+        </div>
+    </div>
+  </form>
+</section>
+</body>
+<script src="login/js/jquery.min.js"></script>
+<script src="login/js/popper.js"></script>
+<script src="login/js/bootstrap.min.js"></script>
+<script src="login/js/main.js"></script>
+</html>

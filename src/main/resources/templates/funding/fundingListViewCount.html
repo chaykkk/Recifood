@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/default}">
+<!-- Basic -->
+
+<head>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>밀키트 펀딩목록</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- <link rel="manifest" href="site.webmanifest"> -->
+    <!-- Place favicon.ico in the root directory -->
+
+  <th:block layout:fragment="css">
+    <!-- CSS here -->
+    <link rel="stylesheet" href="/recipe/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/recipe/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="/recipe/css/magnific-popup.css">
+    <link rel="stylesheet" href="/recipe/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/recipe/css/themify-icons.css">
+    <link rel="stylesheet" href="/recipe/css/nice-select.css">
+    <link rel="stylesheet" href="/recipe/css/flaticon.css">
+    <link rel="stylesheet" href="/recipe/css/gijgo.css">
+    <link rel="stylesheet" href="/recipe/css/animate.min.css">
+    <link rel="stylesheet" href="/recipe/css/slick.css">
+    <link rel="stylesheet" href="/recipe/css/slicknav.css">
+    <link rel="stylesheet" href="/recipe/css/style.css">
+    <!-- <link rel="stylesheet" href="css/responsive.css"> -->
+    </th:block>
+    
+</head>
+
+<body>
+    <th:block layout:fragment="content">
+    <!--[if lte IE 9]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+        <![endif]-->
+    <!-- Start Main Top -->
+  
+    <!-- recepie_area_start  -->
+    <div class="recepie_area plus_padding">
+    <hr>
+     <div style="text-align: center;">
+     <a th:href="@{/fundingList}">전체</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     <a th:href="@{/fundingListKind(kind=한식)}">한식</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     <a th:href="@{/fundingListKind(kind=양식)}">양식</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     <a th:href="@{/fundingListKind(kind=디저트)}">디저트</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     <a th:href="@{/fundingListPrice}">가격순</a> / <a th:href="@{/fundingListViewCount}">인기순</a>
+     </div>
+    
+     <hr>
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-4 col-lg-4 col-md-6" th:each="funding, state : ${funding}">
+                    <div class="single_recepie text-center">
+                        <div class="recepie_thumb"><img th:src="@{/image/}+ ${funding.filename}"></div>
+                        <h3 th:text="${funding.funding_name}"></h3><br>
+                        <i class="fa-solid fa-circle-exclamation" style="color: #b0b435;"></i>&nbsp;&nbsp;<p>펀딩 종료일 :</p>&nbsp;&nbsp;<p th:text="${#dates.format(funding.enddate, 'yyyy-MM-dd')}"></p><br>
+                        <i class="fa-solid fa-coins" style="color: #b0b435;"></i>&nbsp;&nbsp;<p th:text="${#numbers.formatInteger(funding.price,0,'COMMA')}"></p><p>원</p><br>
+                        <i class="fa-solid fa-eye" style="color: #b0b435;"></i>&nbsp;&nbsp;<p th:text="${funding.viewcount}"></p><br>
+                        <a th:href="@{/getFunding(funding_seq=${funding.funding_seq})}" class="line_btn">보러가기</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /recepie_area_start  -->
+
+   
+   </th:block>
+</body>
+ <!-- JS here -->
+     <th:block layout:fragment="script">
+    <script src="/recipe/js/vendor/modernizr-3.5.0.min.js"></script>
+    <script src="/recipe/js/vendor/jquery-1.12.4.min.js"></script>
+    <script src="/recipe/js/popper.min.js"></script>
+    <script src="/recipe/js/bootstrap.min.js"></script>
+    <script src="/recipe/js/owl.carousel.min.js"></script>
+    <script src="/recipe/js/isotope.pkgd.min.js"></script>
+    <script src="/recipe/js/ajax-form.js"></script>
+    <script src="/recipe/js/waypoints.min.js"></script>
+    <script src="/recipe/js/jquery.counterup.min.js"></script>
+    <script src="/recipe/js/imagesloaded.pkgd.min.js"></script>
+    <script src="/recipe/js/scrollIt.js"></script>
+    <script src="/recipe/js/jquery.scrollUp.min.js"></script>
+    <script src="/recipe/js/wow.min.js"></script>
+    <script src="/recipe/js/nice-select.min.js"></script>
+    <script src="/recipe/js/jquery.slicknav.min.js"></script>
+    <script src="/recipe/js/jquery.magnific-popup.min.js"></script>
+    <script src="/recipe/js/plugins.js"></script>
+    <script src="/recipe/js/gijgo.min.js"></script>
+
+    <!--contact js-->
+    <script src="/recipe/js/contact.js"></script>
+    <script src="/recipe/js/jquery.ajaxchimp.min.js"></script>
+    <script src="/recipe/js/jquery.form.js"></script>
+    <script src="/recipe/js/jquery.validate.min.js"></script>
+    <script src="/recipe/js/mail-script.js"></script>
+
+    <script src="/recipe/js/main.js"></script>
+    <script src="https://kit.fontawesome.com/f9c1d37a26.js" crossorigin="anonymous"></script>
+</html>
