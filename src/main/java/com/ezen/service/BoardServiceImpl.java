@@ -5,17 +5,14 @@ import com.ezen.entity.QBoard;
 import com.ezen.entity.Search;
 import com.ezen.persistence.BoardRepository;
 import com.querydsl.core.BooleanBuilder;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Service
-@Log4j2
 public class BoardServiceImpl implements BoardService{
 
     @Autowired

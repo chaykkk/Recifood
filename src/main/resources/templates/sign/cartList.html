@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}">
+<head>
+    <meta charset="UTF-8">
+    <title>장바구니</title>
+</head>
+<body>
+<th:block layout:fragment="content">
+    <!-- Start All Title Box -->
+    <div class="all-title-box">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2>장바구니</h2>
+                     <ul class="breadcrumb">
+		              <li class="breadcrumb-item"><a href="home">Home</a></li>
+		              <li class="breadcrumb-item active">Cart</li>
+		            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End All Title Box -->
+    <!-- Start Cart  -->
+    <div class="cart-box-main" id="cart">
+    <input type="hidden" name="username" id="username" th:value="${session.loginMember.username}">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="table-main table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                	<th style="text-align: center">전체선택&nbsp;<input type="checkbox" id="checkAll" name="checkbox" onclick="checkAll();"></th>
+                                    <th style="text-align: center">사진</th>
+                                    <th style="text-align: center">펀딩명</th>
+                                    <th style="text-align: center">금액</th>
+                                    <th style="text-align: center; width: 80px">수량</th>
+                                    <th style="text-align: center; width: 200px">총금액</th>
+                                    <th style="text-align: center">수정</th>
+                                    <th style="text-align: center">삭제</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="cart : ${cartList}">
+                                <td class="thumbnail-img">
+                                <center><input name = "checkbox" type="checkbox" id="cart_seq" th:value="${cart.cart_seq}"></center>
+                                <input type="hidden" name="cart_seq" id="cart_seq" th:value="${cart.cart_seq}">
+                                </td>
+                                <td class="thumbnail-img"><a th:href="@{/getFunding(funding_seq=${cart.funding_seq})}"><img class="img-fluid" style="width:250px; height:200px" th:src="@{/image/}+ ${cart.filename}"/></a>
+                                <input type="hidden" name="funding_seq" id="funding_seq" th:value="${cart.funding_seq}">
+                                </td>
+                                <td class="remove-pr" th:text="${cart.funding_name}"></td>
+                                <td class="remove-pr price"><p th:text="|${#numbers.formatInteger(cart.price,0,'COMMA')} 원|" name="price" onkeyup="javascript:fn_totalMoney();"></p></td>
+                                <td class="quantity-box">
+                                <i class="fa-solid fa-minus" name="minus"></i>
+                                <input type="text" th:value="${cart.quantity}" name="quantity" id="quantity" class="c-input-text qty text">
+                                <i class="fa-solid fa-plus" name="plus"></i>
+                                </td>
+                                <td class="remove-pr total"><p input type="text" name="sum" readonly onkeyup="javascript:fn_totalMoney();">원</p></td> 
+                                <td class="remove-pr"><a><button class="update" name="">확인</button></a></td>
+                                <td class="remove-pr"><a th:href="@{/deleteCart(cart_seq=${cart.cart_seq})}"><i class="fas fa-times"></i></a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+                       <button class="btn btn-theme" type="button" onclick="DeleteClick()">선택삭제</button>
+			<center>
+            <div class="row my-5">
+                <div class="col-lg-8 col-sm-12"></div>
+                <div class="col-lg-4 col-sm-12">
+                    <div class="order-box">
+                        <h3>선택내역</h3>
+                        <hr>
+                        <div class="d-flex gr-total">
+                            <h5>총 선택금액</h5>
+                            <div class="ml-auto h5">원</div>
+                        </div>
+                        <hr> </div>
+                </div>
+                <div class="col-12 d-flex shopping-box"><a href="checkout.html" class="ml-auto btn hvr-hover">주문하기</a> </div>
+            </div>
+			
+        </div>
+        </center>
+    </div>
+    <!-- End Cart -->
+</th:block>
+</body>
+<th:block layout:fragment="script">
+<script src="https://kit.fontawesome.com/f9c1d37a26.js" crossorigin="anonymous"></script>
+<script type="text/javascript">
+//수량 변경
+$(document).ready(function() {
+	 const cart_seq = $("#cart_seq").val();
+	 const username = $("#username").val();
+	 
+	 
+	 $('.update').on('click', function() {
+		 // 해당 줄의 정보 가져오기
+		 var thisRow = $(this).closest('tr');
+		 var cart_seq = thisRow.find('td:eq(0)').find('input').val();
+		 var funding_seq = thisRow.find('td:eq(1)').find('input').val();
+		 var quantity = thisRow.find('td:eq(2)').find('input').val();
+		 
+		 $.ajax({
+			type: 'POST',
+			url: '/updateCart',
+			contentType: 'application/json',
+			async: false,
+			data: JSON.stringify({
+				'cart_seq' : cart_seq,
+				'funding_seq' : funding_seq,
+				'username': username,
+				'quantity' : $("#quantity").val()
+			}),
+			success: function(data) {
+				alert("수량이 변경되었습니다.");
+				console.log("cart_seq=", cart_seq);
+				console.log("funding_seq=", funding_seq);
+				console.log("username=", username);
+				console.log("quantity=", quantity);
+			}, 
+			error : function() {
+				alert("로그인 후 이용가능합니다.");
+			}
+		 });
+	  });
+});
+
+// 수량버튼
+$(".fa-plus").on("click", function(){
+	let quantity = $(this).parent("td").find("input").val();
+	$(this).parent("td").find("input").val(++quantity);
+});
+$(".fa-minus").on("click", function(){
+	let quantity = $(this).parent("td").find("input").val();
+	if(quantity > 1){
+		$(this).parent("td").find("input").val(--quantity);		
+	}
+});
+
+// 총금액 변경
+/*
+fn_totalMoney = function() {
+	$(".remove-pr price, .c-input-text qty text").each(function(index) {
+		// 콤마제거
+		$(".remove-pr total").each(function(idx) {
+			$(this).val($(this).val().replace(/, /gi, ''));
+		});
+		var price = $(".remove-pr price").eq(index).val();
+		var quantity = $(".c-input-text qty text").eq(index).val();
+		
+		// 형변환
+		price = price*1;
+		quantity = quantity*1;
+		
+		$(".c-input-text qty text").eq(index).val(price*quantity);
+		var total = $(".c-input-text qty text").eq(index).val();
+		
+		// 콤마생성
+		$(".c-input-text qty text").each(function(idx) {
+			$(this).val($(this).val().toString().replace(/\B(?=(\d{3}+)(?!\d))/g, ","));
+		});
+	});
+};
+*/
+
+// 전체선택, 해제
+$(document).on("click", "input:checkbox[name=checkbox]", function(e) {
+	
+	var chks = document.getElementsByName("checkbox");
+	var chksChecked = 0;
+	
+	for(var i=0; i<chks.length; i++) {
+		var checkbox = chks[i];
+		
+		if(checkbox.checked) {
+			chksChecked++;
+		}
+	}
+	
+	if(chks.length == chksChecked){
+		$("#checkAll").prop("checked", true);
+	}else{
+		$("#checkAll").prop("checked",false);
+	}
+	
+});
+
+function checkAll() {
+	if ($("#checkAll").is(':checked')) {
+		$("input[name=checkbox]").prop("checked", true);
+	} else {
+		$("input[name=checkbox]").prop("checked", false);
+	}
+}
+
+// 선택삭제
+function DeleteClick() {
+	var checkBoxArr = [];
+	$("input:checkbox[name='checkbox']:checked").each(function() {
+		checkBoxArr.push($(this).val()); // 체크된 것만 배열에 push
+		console.log(checkBoxArr);
+	})
+	
+	$ajax({
+		type : 'POST',
+		url : '/deleteCartCheck',
+		contentType: 'application/json',
+		data : {
+			checkBoxArr : checkBoxArr
+		},
+		succuess : function(result) {
+			alert("선택한 항목이 삭제되었습니다.");
+			console.log(result);
+		}
+	});
+}
+
+</script>
+</th:block>
+</html>

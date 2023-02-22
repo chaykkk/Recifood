@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@ToString(exclude= {"foodList", "recipeList", "recipeReplyList", "boardList", "fundingList", "boardReplyList", "heartList"})
+@ToString(exclude= {"foodList", "recipeList", "recipeReplyList", "boardList", "fundingList", "boardReplyList", "heartList", "recipeProcedureList", "cartList", "purchaseList"})
 @Getter
 @Setter
 @Valid	// 유효성 검사
@@ -54,7 +54,7 @@ public class Member {
 	@OneToMany(mappedBy="member", fetch=FetchType.EAGER) // 식자재
 	private List<Food> foodList = new ArrayList<Food>();
 	
-	@OneToMany(mappedBy = "member", fetch = FetchType.LAZY) // 게시판
+	@OneToMany(mappedBy = "member", fetch = FetchType.EAGER) // 게시판
 	private List<Board> boardList = new ArrayList<Board>();
 	
 	@OneToMany(mappedBy="member", fetch=FetchType.EAGER) // 레시피
@@ -71,4 +71,13 @@ public class Member {
 
 	@OneToMany(mappedBy = "member", fetch = FetchType.EAGER) // 좋아요
 	private List<Heart> heartList = new ArrayList<Heart>();
+	
+	@OneToMany(mappedBy = "member", fetch = FetchType.EAGER) // 레시피 조리방법
+	private List<RecipeProcedure> recipeProcedureList = new ArrayList<RecipeProcedure>();
+	
+	@OneToMany(mappedBy = "member", fetch = FetchType.EAGER) // 장바구니
+	private List<Cart> cartList = new ArrayList<Cart>();
+	
+	@OneToMany(mappedBy = "member", fetch = FetchType.EAGER) // 결제
+	private List<Purchase> purchaseList = new ArrayList<Purchase>();
 }

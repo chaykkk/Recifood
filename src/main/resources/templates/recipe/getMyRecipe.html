@@ -33,6 +33,7 @@
 <th:block layout:fragment="content">
     <!-- Single Post Section Begin -->
     <section class="single-post spad">
+    <input th:type="hidden" id="recipe_seq" name="recipe_seq" th:value="${recipe.recipe_seq}">
         <center><div class="single-post__hero set-bg" ><img th:src="@{/image/}+ ${recipe.filename}"></div></center>
         <div class="container">
             <div class="row d-flex justify-content-center">
@@ -82,10 +83,17 @@
                             <center><h5>재료</h5></center>
                             <center><p th:text="${recipe.ingredient}"></p></center>
                         </div>
-                        <div class="single-post__recipe__details__direction" style="white-space: pre;">
-                            <center><h5>조리순서</h5></center>
-                            <center><p th:text="${recipe.procedure}"></p></center>
+                         <div class="single-post__recipe__details__indegradients" style="white-space: pre;">
+                            <center><h5>조리방법</h5></center>
                         </div>
+                        <table class="table" style="text-align: center" height="200px" th:each="rp : ${rp}">
+                        <thead>
+                        <tr>
+                        <td width="250px" height="200px" style="padding-bottom: 0px"><img style="width: 200px; height: 200px; display: left" th:src="@{/image/}+ ${rp.filename}"></img></td>
+                        <td height="200px" style="text-align: center" "padding-bottom: 0px"; th:text="${rp.procedure}"></td>
+                        </tr>
+                        </thead>
+                        </table>
                     </div>
                     <div class="single-post__comment">
                         <div class="widget__title">

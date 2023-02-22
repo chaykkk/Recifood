@@ -1,10 +1,134 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}">
 <head>
     <meta charset="UTF-8">
     <title>주문 상세정보페이지</title>
 </head>
 <body>
-
+<th:block layout:fragment="content">
+    <div class="all-title-box">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2>주문 상세정보</h2>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a th:href="@{/home}">Home</a></li>
+                        <li class="breadcrumb-item active">Purchase</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="cart-box-main">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6 col-lg-6 mb-3">
+                    <div class="checkout-address">
+                        <div class="title-left">
+                            <h3>주문자 정보</h3>
+                        </div>
+                        <div class="d-flex">
+                            <h5 th:text="아이디"/>
+                            <h5 class="ml-auto font-weight-bold" th:text="${purchase.member.username}"/>
+                        </div>
+                        <div class="d-flex">
+                            <h5 th:text="핸드폰번호"/>
+                            <h5 class="ml-auto font-weight-bold" th:text="${purchase.member.phone}"/>
+                        </div>
+                        <div class="d-flex">
+                            <h5 th:text="이메일"/>
+                            <h5 class="ml-auto font-weight-bold" th:text="${purchase.member.email}"/>
+                        </div>
+                        <br>
+                        <div class="title-left">
+                            <h3>배송 정보</h3>
+                        </div>
+                        <div class="d-flex">
+                            <h5 th:text="이름"/>
+                            <h5 class="ml-auto font-weight-bold" th:text="${purchase.name}"/>
+                        </div>
+                        <div class="d-flex">
+                            <h5 th:text="핸드폰번호"/>
+                            <h5 class="ml-auto font-weight-bold" th:text="${purchase.phone}"/>
+                        </div>
+                        <div class="d-flex">
+                            <h5 th:text="우편번호"/>
+                            <h5 class="ml-auto font-weight-bold" th:text="${purchase.zip_num}"/>
+                        </div>
+                        <div class="d-flex">
+                            <h5 th:text="주소"/>
+                            <h5 class="ml-auto font-weight-bold" th:text="${purchase.address}"/>
+                        </div>
+                        <div class="d-flex">
+                            <h5 th:text="배송요청사항"/>
+                            <h5 class="ml-auto font-weight-bold" th:text="${purchase.p_comment}"/>
+                        </div>
+                        <div class="d-flex">
+                            <h5 th:text="배송상태"/>
+                            <div class="ml-auto" th:switch="${purchase.result}">
+                                <h5 class="font-weight-bold" th:case="1">배송준비중</h5>
+                                <h5 class="font-weight-bold" th:case="2">배송중</h5>
+                                <h5 class="font-weight-bold" th:case="3">배송완료</h5>
+                            </div>
+                        </div>
+                        <hr>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-lg-6 mb-3">
+                    <div class="row">
+                        <div class="col-md-12 col-lg-12">
+                            <div class="odr-box">
+                                <div class="title-left">
+                                    <h3>상품정보</h3>
+                                </div>
+                                <div class="rounded p-2 bg-light">
+                                    <div class="media mb-2">
+                                        <div class="media-body"><p th:text="${purchase.funding.funding_name}"/>
+                                            <div class="small text-muted">가격:&nbsp;<p th:text="${#numbers.formatInteger(purchase.funding.price,0,'COMMA')}"/><span class="mx-2">|</span> 수량: <p th:text="${purchase.quantity}"/><span class="mx-2">|</span> 합계: <p th:text="${#numbers.formatInteger(purchase.price,0,'COMMA')}"/></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="checkout-address">
+                                <div class="title-left">
+                                    <h3>결제 정보</h3>
+                                </div>
+                                <div class="d-flex">
+                                    <h5 th:text="결제수단"/>
+                                    <div class="ml-auto" th:switch="${purchase.payment}">
+                                        <h5 class="font-weight-bold" th:case="1">카카오페이</h5>
+                                        <h5 class="font-weight-bold" th:case="2">무통장입금</h5>
+                                    </div>
+                                </div>
+                                <div class="d-flex" th:if="${purchase.payment} == 2">
+                                    <h5 th:text="입금자명"/>
+                                    <h5 class="ml-auto font-weight-bold" th:text="${purchase.payer}"/>
+                                </div>
+                                <div class="d-flex">
+                                    <h5 th:text="상품금액"/>
+                                    <h5 class="ml-auto font-weight-bold" th:text="${purchase.price}"/>
+                                </div>
+                                <div class="d-flex">
+                                    <h5 th:text="배송비"/>
+                                    <h5 class="ml-auto font-weight-bold">0</h5>
+                                </div>
+                                <div class="d-flex">
+                                    <h5 th:text="총결제금액"/>
+                                    <h5 class="ml-auto font-weight-bold" th:text="${purchase.price}"/>
+                                </div>
+                                <hr>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 d-flex shopping-box"> <a class="ml-auto btn hvr-hover" th:href="@{/purchaseList}">구매목록으로</a> </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</th:block>
 </body>
 </html>

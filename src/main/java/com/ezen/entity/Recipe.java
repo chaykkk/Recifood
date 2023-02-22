@@ -24,7 +24,7 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@ToString(exclude={"member", "recipeReplyList", "funding", "heartList"})
+@ToString(exclude={"member", "recipeReplyList", "funding", "heartList", "recipeProcedureList"})
 @Entity
 public class Recipe {
 	@Id
@@ -38,7 +38,6 @@ public class Recipe {
 	private int cooking_time; // 요리시간
 	private int amount; // 요리분량
 	private String degree; // 난이도
-	private String procedure; // 조리방법
 	private String filename; // 파일이름
 	private String filepath; // 파일경로
 	@Column(insertable=false, updatable=false)
@@ -71,4 +70,7 @@ public class Recipe {
 
 	@OneToMany(mappedBy = "recipe", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
 	private List<Heart> heartList = new ArrayList<Heart>();
+	
+	@OneToMany(mappedBy = "recipe", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	private List<RecipeProcedure> recipeProcedureList = new ArrayList<>();
 }

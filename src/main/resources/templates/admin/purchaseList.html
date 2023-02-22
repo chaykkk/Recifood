@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}">
+<head>
+    <meta charset="UTF-8">
+    <title>주문페이지</title>
+</head>
+<body>
+<th:block layout:fragment="content">
+    <!-- Start All Title Box -->
+    <div class="all-title-box">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <h2>펀딩 주문목록</h2>
+            <ul class="breadcrumb">
+              <li class="breadcrumb-item"><a href="home">Home</a></li>
+              <li class="breadcrumb-item active">purchase</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End All Title Box -->
+
+    <!-- Start Cart  -->
+    <div class="cart-box-main">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+              <!-- 검색창 -->
+              <div>
+                  <div>
+                      <form th:action="@{/allPurchaseList}">
+                          <table th:align="center" th:cellpadding="5" th:cellspacing="5" th:width="880">
+                              <tr>
+                                  <td th:align="right">
+                                      <select class="nav-link dropdown-toggle arrow" data-toggle="dropdown" name="searchCondition">
+                                          <option placeholder="">Category</option>
+                                          <option th:value="USERNAME">주문자명</option>
+                                          <option th:value="FUNDING_NAME">제품명</option>
+                                      </select>
+                                  </td>
+                                  <td th:width="500">
+                                      <div class="row my-3">
+                                          <div class="col-lg-6 col-sm-6">
+                                              <div class="coupon-box">
+                                                  <div class="input-group input-group-sm">
+                                                    <input style="border:1px solid black;" class="form-control" name="searchKeyword" placeholder="검색어를 입력하세요." type="text">
+                                                      <div class="input-group-append">
+                                                      <button class="btn btn-theme" type="submit"><i class="fa fa-search"></i> </button>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </td>
+                              </tr>
+                          </table>
+                      </form>
+                  </div>
+              </div>
+              <!-- 검색창 -->
+            <div class="table-main table-responsive">
+              <table class="table">
+                <thead>
+                <tr th:align="center">
+                  <th>번호</th>
+                  <th>주문번호</th>
+                  <th>제품명</th>
+                  <th>주문자</th>
+                  <th>주문수량</th>
+                  <th>결제금액</th>
+                  <th>주문일자</th>
+                </tr>
+                </thead>
+                <tr th:each="purchase:${purchaseList}" th:align="center">
+                  <td class="remove-pr">
+                    <p th:text="${purchase.purchaseSeq}"/>
+                  </td>
+                  <td class="price-pr">
+                    <a th:href="@{/getPurchase(purchaseSeq=${purchase.purchaseSeq})}" th:text="${purchase.purchase_uid}"/>
+                  </td>
+                  <td class="price-pr" th:align="left">
+                    <a th:href="@{/getFunding(funding_seq=${purchase.funding.getFunding_seq()})}" th:text="${purchase.funding.funding_name}"/>
+                  </td>
+                  <td class="price-pr">
+                    <p th:text="${purchase.member.username}"/>
+                  </td>
+                  <td class="price-pr">
+                    <p th:text="${purchase.quantity}"/>
+                  </td>
+                  <td class="total-pr">
+                    <p th:text="${purchase.price}"/>
+                  </td>
+                  <td class="name-pr">
+                    <p th:text="${#dates.format(purchase.regdate, 'yyyy-MM-dd')}"/>
+                  </td>
+                </tr>
+              </table>
+            </div><br><br>
+              <!-- 페이징 처리 -->
+            <div th:if="${!purchaseList.isEmpty()}">
+              <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${!purchaseList.hasPrevious()} ? 'disabled'">
+                  <a class="page-link" th:href="@{purchaseList(page=${purchaseList.number})}">
+                    <span>이전</span>
+                  </a>
+                </li>
+                <li th:each="page: ${#numbers.sequence(1, purchaseList.getTotalPages())}"
+                    th:if="${page >= purchaseList.number-4 and page <= purchaseList.number+6}"
+                    th:classappend="${page == purchaseList.number+1} ? 'active'"
+                    class="page-item">
+<!--                  <a th:text="${page}" class="page-link" th:href="@{|?page=${page}|}"></a>-->
+                  <a th:text="${page}" class="page-link" th:href="@{purchaseList(page=${page})}"></a>
+                </li>
+
+                <li class="page-item" th:classappend="${!purchaseList.hasNext()} ? 'disabled'">
+                  <a class="page-link" th:href="@{purchaseList(page=${purchaseList.number+2})}">
+                    <span>다음</span>
+                  </a>
+                </li>
+              </ul>
+              <br><br>
+            </div>
+              <!-- 페이징 처리 -->
+          </div>
+        </div>
+      </div>
+    </div>
+</th:block>
+</body>
+</html>

@@ -2,7 +2,6 @@ package com.ezen.service;
 
 import com.ezen.entity.Heart;
 import com.ezen.persistence.HeartRepository;
-import com.ezen.persistence.RecipeRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;

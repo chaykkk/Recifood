@@ -24,7 +24,7 @@
                 <h2>공지사항</h2>
                 <ul class="breadcrumb">
                     <li class="breadcrumb-item"><a href="home">Home</a></li>
-                    <li class="breadcrumb-item active">Free</li>
+                    <li class="breadcrumb-item active">Notice</li>
                 </ul>
             </div>
         </div>
@@ -67,20 +67,20 @@
             <div th:if="${!boardList.isEmpty()}">
               <ul class="pagination justify-content-center">
                 <li class="page-item" th:classappend="${!boardList.hasPrevious()} ? 'disabled'">
-                  <a class="page-link" th:href="@{|?page=${boardList.number-1}|}">
+                  <a class="page-link" th:href="@{boardList(category=${param.category}, page=${boardList.number})}">
                     <span>이전</span>
                   </a>
                 </li>
-                <li th:each="page: ${#numbers.sequence(0, boardList.getTotalPages()-1)}"
-                    th:if="${page >= boardList.number-5 and page <= boardList.number+5}"
-                    th:classappend="${page == boardList.number} ? 'active'"
+                <li th:each="page: ${#numbers.sequence(1, boardList.getTotalPages())}"
+                    th:if="${page >= boardList.number-4 and page <= boardList.number+6}"
+                    th:classappend="${page == boardList.number+1} ? 'active'"
                     class="page-item">
 <!--                  <a th:text="${page}" class="page-link" th:href="@{|?page=${page}|}"></a>-->
-                  <a th:text="${page}" class="page-link" th:href="@{freeBoardList(category=${param.category}, page=${page})}"></a>
+                  <a th:text="${page}" class="page-link" th:href="@{boardList(category=${param.category}, page=${page})}"></a>
                 </li>
 
                 <li class="page-item" th:classappend="${!boardList.hasNext()} ? 'disabled'">
-                  <a class="page-link" th:href="@{|?page=${boardList.number+1}|}">
+                  <a class="page-link" th:href="@{boardList(category=${param.category}, page=${boardList.number+2})}">
                     <span>다음</span>
                   </a>
                 </li>
@@ -90,18 +90,8 @@
               <!-- 페이징 처리 -->
           </div>
         </div>
-        <div class="row my-5">
-          <div class="col-lg-6 col-sm-6">
-            <div class="coupon-box">
-              <div class="input-group input-group-sm">
-                <input class="form-control" aria-label="Coupon code" type="text">
-                <div class="input-group-append">
-                  <button class="btn btn-theme" type="button">검색</button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-6 col-sm-6">
+        <div class="row my-2">
+          <div class="col-lg-6 col-sm-6" th:if="${category.equals(2) && session.loginMember != null}">
             <div class="update-box">
               <input value="등록" type="submit" th:onclick="|location.href='@{/insertBoard}'|">
             </div>

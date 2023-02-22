@@ -3,6 +3,10 @@ package com.ezen.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.ezen.entity.Funding;
@@ -41,33 +45,39 @@ public class FundingServiceImpl implements FundingService {
 	}
 
 	@Override
-	public List<Funding> getAllFundingList(Funding funding) {
-		return fundingRepo.findAll();
+	public Page<Funding> getAllFundingList(Funding funding, int page) {
+		Pageable pageable = PageRequest.of(page-1, 6, Sort.Direction.DESC, "funding_seq");
+		return fundingRepo.getAllFundingList(funding, pageable);
 	}
 
 	@Override
-	public List<Funding> getAllFundingListByKind(String kind) {
-		return fundingRepo.getAllFundingListByKind(kind);
+	public Page<Funding> getAllFundingListByKind(String kind, int page) {
+		Pageable pageable = PageRequest.of(page-1, 6, Sort.Direction.DESC, "funding_seq");
+		return fundingRepo.getAllFundingListByKind(kind, pageable);
 	}
 
 	@Override
-	public List<Funding> getMyFundingList(String username) {
-		return fundingRepo.getMyFundingList(username);
+	public Page<Funding> getMyFundingList(String username, int page) {
+		Pageable pageable = PageRequest.of(page-1, 10, Sort.Direction.DESC, "funding_seq");
+		return fundingRepo.getMyFundingList(username, pageable);
 	}
 
 	@Override
-	public List<Funding> getMyFundingListByKind(String username, String kind) {
-		return fundingRepo.getMyFundingListByKind(username, kind);
+	public Page<Funding> getMyFundingListByKind(String username, String kind, int page) {
+		Pageable pageable = PageRequest.of(page-1, 10, Sort.Direction.DESC, "funding_seq");
+		return fundingRepo.getMyFundingListByKind(username, kind, pageable);
 	}
 
 	@Override
-	public List<Funding> getAllFundingListByPrice(Funding funding) {
-		return fundingRepo.getAllFundingListByPrice(funding);
+	public Page<Funding> getAllFundingListByPrice(Funding funding, int page) {
+		Pageable pageable = PageRequest.of(page-1, 6);
+		return fundingRepo.getAllFundingListByPrice(funding, pageable);
 	}
 
 	@Override
-	public List<Funding> getAllFundingListByVC(Funding funding) {
-		return fundingRepo.getAllFundingListByVC(funding);
+	public Page<Funding> getAllFundingListByVC(Funding funding, int page) {
+		Pageable pageable = PageRequest.of(page-1, 6);
+		return fundingRepo.getAllFundingListByVC(funding, pageable);
 	}
 
 	@Override
@@ -81,6 +91,11 @@ public class FundingServiceImpl implements FundingService {
 	}
 
 	@Override
+	public void updateResultTwo(Long recipe_seq) {
+		fundingRepo.updateResultTwo(recipe_seq);
+	}
+	
+	@Override
 	public int updateViewCount(Long funding_seq) {
 		return fundingRepo.updateViewCount(funding_seq);
 	}
@@ -88,6 +103,11 @@ public class FundingServiceImpl implements FundingService {
 	@Override
 	public List<Funding> getBestFundingList(Funding funding) {
 		return fundingRepo.getBestFundingList(funding);
+	}
+
+	@Override
+	public List<Funding> getAllFundingListCart(Funding funding) {
+		return fundingRepo.findAll();
 	}
 
 }

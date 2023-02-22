@@ -13,7 +13,14 @@
   <div class="all-title-box">
     <div class="container">
       <div class="row">
-        <div class="col-lg-12">
+        <div class="col-lg-12" th:if="${session.loginMember.role.toString().equals('ADMIN')}">
+          <h2>공지사항</h2>
+          <ul class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/home">Home</a></li>
+            <li class="breadcrumb-item active">Notice</li>
+          </ul>
+        </div>
+        <div class="col-lg-12" th:if="${session.loginMember.role.toString().equals('MEMBER')}">
           <h2>게시글</h2>
           <ul class="breadcrumb">
             <li class="breadcrumb-item"><a href="/home">Home</a></li>
@@ -27,6 +34,7 @@
 
   <!-- Start Contact Us  -->
   <form id="contactForm" method="post" th:action="@{/insertBoard}">
+    <input th:type="hidden" id="role" name="role" th:if="${session.loginMember != null}" th:value="${session.loginMember.role}">
   <div class="contact-box-main" th:align="center">
     <div class="container">
         <div class="col-lg-8 col-sm-12">

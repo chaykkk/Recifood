@@ -70,7 +70,30 @@
     </div>
     <!-- /recepie_area_start  -->
 
-   
+   <!-- 페이징 처리 -->
+           <div th:if="${!recipe.isEmpty()}">
+             <ul class="pagination justify-content-center">
+               <li class="page-item" th:classappend="${!recipe.hasPrevious()} ? 'disabled'">
+                 <a class="page-link" th:href="@{|?page=${recipe.number}|}">
+                   <span>이전</span>
+                 </a>
+               </li>
+               <li th:each="page: ${#numbers.sequence(1, recipe.getTotalPages())}"
+                   th:if="${page >= recipe.number-4 and page <= recipe.number+6}"
+                   th:classappend="${page == recipe.number+1} ? 'active'"
+                   class="page-item">
+                 <a th:text="${page}" class="page-link" th:href="@{/recipeListGood(page=${page})}"></a>
+               </li>
+
+               <li class="page-item" th:classappend="${!recipe.hasNext()} ? 'disabled'">
+                 <a class="page-link" th:href="@{|?page=${recipe.number+2}|}">
+                   <span>다음</span>
+                 </a>
+               </li>
+             </ul>
+             <br><br>
+           </div>
+             <!-- 페이징 처리 -->
    </th:block>
 </body>
  <!-- JS here -->

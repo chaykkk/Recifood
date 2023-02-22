@@ -1,12 +1,11 @@
 package com.ezen.controller;
 
-
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,29 +29,31 @@ public class FundingController {
 	private FundingService fundingService;
 	
 	@GetMapping("/fundingList")
-	public String fundingList(Funding funding, Model model) {
-		List<Funding> fundingList = fundingService.getAllFundingList(funding);
+	public String fundingList(@RequestParam(value="page", defaultValue="1") int page, Funding funding, Model model) {
+		Page<Funding> fundingList = fundingService.getAllFundingList(funding, page);
 		model.addAttribute("funding", fundingList);
 		return "funding/fundingList";
 	}
 	
 	@GetMapping("/fundingListKind")
-	public String fundingListKind(Funding funding, Model model) {
-		List<Funding> fundingList = fundingService.getAllFundingListByKind(funding.getKind());
+	public String fundingListKind(@RequestParam(value="page", defaultValue="1") int page, 
+									@RequestParam(value = "kind", defaultValue = "") String kind,
+									Funding funding, Model model) {
+		Page<Funding> fundingList = fundingService.getAllFundingListByKind(funding.getKind(), page);
 		model.addAttribute("funding", fundingList);
 		return "funding/fundingListKind";
 	}
 	
 	@GetMapping("/fundingListPrice")
-	public String fundingListByPrice(Funding funding, Model model) {
-		List<Funding> fundingList = fundingService.getAllFundingListByPrice(funding);
+	public String fundingListByPrice(@RequestParam(value="page", defaultValue="1") int page, Funding funding, Model model) {
+		Page<Funding> fundingList = fundingService.getAllFundingListByPrice(funding, page);
 		model.addAttribute("funding", fundingList);
 		return "funding/fundingListPrice";
 	}
 	
 	@GetMapping("/fundingListViewCount")
-	public String fundingListViewCount(Funding funding, Model model) {
-		List<Funding> fundingList = fundingService.getAllFundingListByVC(funding);
+	public String fundingListViewCount(@RequestParam(value="page", defaultValue="1") int page, Funding funding, Model model) {
+		Page<Funding> fundingList = fundingService.getAllFundingListByVC(funding, page);
 		model.addAttribute("funding", fundingList);
 		return "funding/fundingListViewCount";
 	}
@@ -105,29 +106,31 @@ public class FundingController {
 	}
 	
 	@GetMapping("/myFundingList")
-	public String myfundingList(HttpSession session, Model model, Funding funding) {
+	public String myfundingList(@RequestParam(value="page", defaultValue="1") int page, HttpSession session, Model model, Funding funding) {
 		Member loginMember = (Member)session.getAttribute("loginMember");
 		
 		if (loginMember == null) {
 			return "sign/login";
 		} else {
 			funding.setMember(loginMember);
-			List<Funding> fundingList = fundingService.getMyFundingList(funding.getMember().getUsername());
-			model.addAttribute("fundingList", fundingList);
+			Page<Funding> fundingList = fundingService.getMyFundingList(funding.getMember().getUsername(), page);
+			model.addAttribute("funding", fundingList);
 			return "funding/myFundingList";
 		}
 	}
 	
 	@GetMapping("/myFundingListKind")
-	public String myfundingListKind(HttpSession session, Model model, Funding funding) {
+	public String myfundingListKind(@RequestParam(value="page", defaultValue="1") int page, 
+									@RequestParam(value = "kind", defaultValue = "") String kind,
+									HttpSession session, Model model, Funding funding) {
 		Member loginMember = (Member)session.getAttribute("loginMember");
 		
 		if (loginMember == null) {
 			return "sign/login";
 		} else {
 			funding.setMember(loginMember);
-			List<Funding> fundingList = fundingService.getMyFundingListByKind(funding.getMember().getUsername(), funding.getKind());
-			model.addAttribute("fundingList", fundingList);
+			Page<Funding> fundingList = fundingService.getMyFundingListByKind(funding.getMember().getUsername(), funding.getKind(), page);
+			model.addAttribute("funding", fundingList);
 			return "funding/myFundingListKind";
 		}
 	}
@@ -203,13 +206,18 @@ public class FundingController {
 	}
 	
 	@GetMapping("/deleteFunding")
-	public String deleteFunding(HttpSession session, Funding funding) {
+	public String deleteFunding(@RequestParam(value="recipe_seq") long recipe_seq, HttpSession session, Funding funding) {
 		Member loginMember = (Member)session.getAttribute("loginMember");
 		
 		if (loginMember == null) {
 			return "sign/login";
 		} else  {
+			Recipe recipe = new Recipe();
+			recipe.setRecipe_seq(recipe_seq);
+			funding.setRecipe(recipe);
+			
 			funding.setMember(loginMember);
+			fundingService.updateResultTwo(funding.getRecipe().getRecipe_seq());
 			fundingService.deleteFunding(funding);
 			return "redirect:myFundingList";
 		}

@@ -60,7 +60,7 @@
                     <div class="help-block with-errors"></div>
                   </div>
                   <div class="submit-button text-center">
-                    <button class="btn hvr-hover" type="button" th:onclick="|location.href='@{/updateBoard(boardSeq=${board.boardSeq})}'|">수정</button>
+                    <button class="btn hvr-hover" type="button" th:if="${session.loginMember != null && session.loginMember.username.equals(board.member.username)}" th:onclick="|location.href='@{/updateBoard(boardSeq=${board.boardSeq})}'|">수정</button>
                     <button class="btn hvr-hover" type="button" th:onclick="|location.href='@{/boardList}'|">뒤로</button>
                   </div>
                 </div>
@@ -73,19 +73,19 @@
                 <div class="card-body">
                   <h2>Comment</h2><br>
                   <!-- 댓글 -->
-                  <tr th:each="boardre:${boardReplyList}">
+                  <tr th:each="boardRe:${boardReplyList}">
                   <div class="d-flex mb-4">
                     <div class="d-flex">
                       <div class="ms-3" th:align="left">
-                        <div class="fw-bold"><a th:text="${boardre.member.username}"/>&nbsp;&nbsp;<small class="text-muted" th:text="${#dates.format(boardre.regdate, 'yyyy-MM-dd')}"></small></div>
-                        <p th:text="${boardre.content}"></p>
+                        <div class="fw-bold"><a th:text="${boardRe.member.username}"/>&nbsp;&nbsp;<small class="text-muted" th:text="${#dates.format(boardRe.regdate, 'yyyy-MM-dd')}"></small></div>
+                        <p th:text="${boardRe.content}"></p>
                       </div>
                     </div>
                   </div>
                   </tr>
                   <tr th:if="${boardReplyList == null}">
-                    <p>댓글이 존재하지 않습니다.</p>
-                  </tr><br>
+                    <p>댓글이 존재하지 않습니다.</p><br>
+                  </tr>
                   <!-- 댓글 입력창-->
                   <form class="mb-4">
                     <input th:type="hidden" id="replyUsername" name="username" th:if="${session.loginMember != null}" th:value="${session.loginMember.username}">

@@ -656,6 +656,7 @@
      transition-duration: 0.3s;
      border-radius: 0;
      box-shadow: none;
+     color: white;
 }
  .hvr-hover::after {
     content: "";
@@ -1358,6 +1359,7 @@
 }
 .footer-widget, .footer-link, .footer-link-contact{
 	margin-top: 15px;
+	margin-bottom: -80px;
 }
  .footer-widget h4 {
      color: #ffffff;
@@ -2516,7 +2518,7 @@
      margin-bottom: 30px;
 }
  .single-product-details ul li{
-     width: 50%;
+     width: 100%;
      float: left;
      padding: 0px 15px;
 }

@@ -18,7 +18,7 @@
                 <div class="col-xl-5 col-lg-5 col-md-6">
                     <div id="carousel-example-1" class="single-product-slider carousel slide" data-ride="carousel">
                         <div class="carousel-inner" role="listbox">
-                            <div class="carousel-item active"> <img th:src="@{/image/}+ ${funding.filename}"> </div>
+                            <div class="carousel-item active"> <img style="width: 400px" height="450px" th:src="@{/image/}+ ${funding.filename}"> </div>
                         </div>
                     </div>
                 </div>
@@ -33,11 +33,12 @@
 						<ul>
 							<li>
 								<div class="form-group quantity-box">
+								<center>
 									<label class="control-label">수량</label>
 									<input class="form-control" value="0" min="0" max="20" type="number"><br>
 									<a class="btn hvr-hover" data-fancybox-close="" href="#">구매하기</a>
-									<a class="btn hvr-hover" href="#"><i class="fas fa-heart"></i></a>
-								
+									<a class="btn hvr-hover" href="#">장바구니 담기</a>
+								</center>
 								</div>
 							</li>
 						</ul>

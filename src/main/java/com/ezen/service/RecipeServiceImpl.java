@@ -3,9 +3,15 @@ package com.ezen.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.ezen.entity.Recipe;
+import com.ezen.entity.RecipeProcedure;
+import com.ezen.persistence.RecipeProcedureRepository;
 import com.ezen.persistence.RecipeRepository;
 
 @Service
@@ -13,27 +19,38 @@ public class RecipeServiceImpl implements RecipeService {
 
 	@Autowired
 	private RecipeRepository recipeRepo;
+	@Autowired
+	private RecipeProcedureRepository recipeProcedureRepo;
+	@Autowired
+	private RecipeProcedureService recipeProcedureService;
 	
 	@Override
-	public void insertRecipe(Recipe recipe) {
-    	recipeRepo.save(recipe);
+	public void insertRecipe(Recipe recipe, List<RecipeProcedure> listProcedure) {
+		
+		// 레시피를 레포지토리에 저장
+    	Recipe result = recipeRepo.saveAndFlush(recipe);
+    	
+    	// 레시피 과정 저장
+    	for(RecipeProcedure recipeProcedure : listProcedure) {
+    		recipeProcedure.setRecipe(result);
+    		recipeProcedureRepo.save(recipeProcedure);
+    	}
 	}
 
 	@Override
-	public void updateRecipe(Recipe recipe) {
-		Recipe findRecipe = recipeRepo.findById(recipe.getRecipe_seq()).get();
-		findRecipe.setKind(recipe.getKind());
-		findRecipe.setRecipe_name(recipe.getRecipe_name());
-		findRecipe.setContent(recipe.getContent());
-		findRecipe.setIngredient(recipe.getIngredient());
-		findRecipe.setCooking_time(recipe.getCooking_time());
-		findRecipe.setAmount(recipe.getAmount());
-		findRecipe.setDegree(recipe.getDegree());
-		findRecipe.setProcedure(recipe.getProcedure());
-		findRecipe.setFilename(recipe.getFilename());
-		findRecipe.setFilepath(recipe.getFilepath());
+	public void updateRecipe(Recipe recipe, List<RecipeProcedure> listProcedure) {
 		
-		recipeRepo.save(findRecipe);
+		// 레시피를 레포지토리에 저장
+    	recipeRepo.save(recipe);
+    	
+    	// 기존 레시피 과정 삭제
+    	recipeProcedureService.deleteRecipeProcedure(recipe.getRecipe_seq());
+    	
+    	// 레시피 과정 수정 저장
+    	for(RecipeProcedure recipeProcedure : listProcedure) {
+    		recipeProcedure.setRecipe(recipe);
+    		recipeProcedureRepo.save(recipeProcedure);
+    	}
 	}
 
 	@Override
@@ -42,13 +59,15 @@ public class RecipeServiceImpl implements RecipeService {
 	}
 
 	@Override
-	public List<Recipe> getRecipeList(String username) {
-		return (List<Recipe>) recipeRepo.getRecipeList(username);
+	public Page<Recipe> getRecipeList(String username, int page) {
+		Pageable pageable = PageRequest.of(page-1, 10, Sort.Direction.DESC, "recipe_seq");
+		return recipeRepo.getRecipeList(username, pageable);
 	}
 
 	@Override
-	public List<Recipe> getRecipeListByKind(String username, String kind) {
-		return (List<Recipe>) recipeRepo.getRecipeListByKind(username, kind);
+	public Page<Recipe> getRecipeListByKind(String username, String kind, int page) {
+		Pageable pageable = PageRequest.of(page-1, 10, Sort.Direction.DESC, "recipe_seq");
+		return recipeRepo.getRecipeListByKind(username, kind, pageable);
 	}
 
 	@Override
@@ -57,23 +76,27 @@ public class RecipeServiceImpl implements RecipeService {
 	}
 
 	@Override
-	public List<Recipe> getAllRecipeList(Recipe recipe) {
-		return recipeRepo.findAll();
+	public Page<Recipe> getAllRecipeList(Recipe recipe, int page) {
+		Pageable pageable = PageRequest.of(page-1, 6, Sort.Direction.DESC, "recipe_seq");
+		return recipeRepo.getAllRecipeList(recipe, pageable);
 	}
 
 	@Override
-	public List<Recipe> getAllRecipeListByKind(String kind) {
-		return recipeRepo.getAllRecipeListByKind(kind);
+	public Page<Recipe> getAllRecipeListByKind(String kind, int page) {
+		Pageable pageable = PageRequest.of(page-1, 6, Sort.Direction.DESC, "recipe_seq");
+		return recipeRepo.getAllRecipeListByKind(kind, pageable);
 	}
 
 	@Override
-	public List<Recipe> getRecipeListDESC(Recipe recipe) {
-		return recipeRepo.getRecipeListDESC(recipe);
+	public Page<Recipe> getRecipeListDESC(Recipe recipe, int page) {
+		Pageable pageable = PageRequest.of(page-1, 6);
+		return recipeRepo.getRecipeListDESC(recipe, pageable);
 	}
 
 	@Override
-	public List<Recipe> getRecipeListGood(Recipe recipe) {
-		return recipeRepo.getRecipeListGood(recipe);
+	public Page<Recipe> getRecipeListGood(Recipe recipe, int page) {
+		Pageable pageable = PageRequest.of(page-1, 6);
+		return recipeRepo.getRecipeListGood(recipe, pageable);
 	}
 
 	@Override

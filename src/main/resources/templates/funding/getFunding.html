@@ -4,7 +4,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/default}">
 <head>
-    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Title</title>
 </head>
 
@@ -14,16 +14,19 @@
     <!-- Start Shop Detail  -->
     <div class="shop-detail-box-main">
         <div class="container">
+        <input th:type="hidden" id="username" name="username" th:if="${session.loginMember != null}" th:value="${session.loginMember.username}">
             <div class="row">
                 <div class="col-xl-5 col-lg-5 col-md-6">
                     <div id="carousel-example-1" class="single-product-slider carousel slide" data-ride="carousel">
                         <div class="carousel-inner" role="listbox">
-                            <div class="carousel-item active"> <img th:src="@{/image/}+ ${funding.filename}"> </div>
+                            <div class="carousel-item active"> <img style="width: 400px" height="450px" th:src="@{/image/}+ ${funding.filename}"> </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-xl-7 col-lg-7 col-md-6">
                     <div class="single-product-details">
+                    <form th:method="post" th:action="@{/purchase}">
+                    <input type="hidden" name="funding_seq" id="funding_seq" th:value="${funding.funding_seq}">
                         <center><h2 th:text="${funding.funding_name}"></h2><br></center>
                         <center><h5 th:text="${funding.content}"></h5><br><br></center>
                         <center><p class="available-stock"><span>펀딩기간 : </span><span th:text="${#dates.format(funding.startdate, 'yyyy-MM-dd')}"></span>
@@ -33,17 +36,19 @@
 						<ul>
 							<li>
 								<div class="form-group quantity-box">
+								<center>
 									<label class="control-label">수량</label>
-									<input class="form-control" value="0" min="0" max="20" type="number"><br>
-									<a class="btn hvr-hover" data-fancybox-close="" href="#">구매하기</a>
-									<a class="btn hvr-hover" href="#"><i class="fas fa-heart"></i></a>
-								
+									<input type="number" class="form-control" id="quantity" name="quantity" min="1" max="20" value="1"><br>
+									<button th:type="submit" class="btn hvr-hover" data-fancybox-close="">구매하기</button>
+									<a><button class="btn hvr-hover" id="insertCart">장바구니 담기</a>
+								</center>
 								</div>
 							</li>
 						</ul>
 						<div class="add-comp">
 								<a class="btn hvr-hover" th:href="@{/fundingList}">목록</a>
 						</div>
+					 </form>
                     </div>
                 </div>
             </div>
@@ -52,7 +57,9 @@
     <!-- End Cart -->
 
     <a href="#" id="back-to-top" title="Back to top" style="display: none;">&uarr;</a>
-
+</th:block>
+</body>
+<th:block layout:fragment="script">
     <!-- ALL JS FILES -->
     <script src="js/jquery-3.2.1.min.js"></script>
     <script src="js/popper.min.js"></script>
@@ -61,7 +68,6 @@
     <script src="js/jquery.superslides.min.js"></script>
     <script src="js/bootstrap-select.js"></script>
     <script src="js/inewsticker.js"></script>
-    <script src="js/bootsnav.js."></script>
     <script src="js/images-loded.min.js"></script>
     <script src="js/isotope.min.js"></script>
     <script src="js/owl.carousel.min.js"></script>
@@ -69,7 +75,38 @@
     <script src="js/form-validator.min.js"></script>
     <script src="js/contact-form-script.js"></script>
     <script src="js/custom.js"></script>
+    <script type="text/javascript" src="/food/js/jquery.min.js"></script>
+    <script type="text/javascript">  
+   $(document).ready(function() {
+	 
+		 const funding_seq = $("#funding_seq").val();
+		 const username = $("#username").val();
+		 
+		 $('#insertCart').on('click', function() {
+			 $.ajax({
+				type: 'POST',
+				url: '/insertCart',
+				contentType: 'application/json',
+				data: JSON.stringify({
+					'funding_seq' : funding_seq,
+					'quantity' : $("#quantity").val(),
+					'username': username
+				}),
+				success: function(data) {
+					alert("장바구니에 추가되었습니다!");
+					location.reload();		
+				}, 
+				error : function() {
+					alert("로그인 후 이용가능합니다.");
+					login();
+				}
+			 });
+		  });
+   });
+   
+   function login() {
+   	window.location.replace("/login");
+   }
+</script>
 </th:block>
-</body>
-
 </html>

@@ -9,16 +9,14 @@
 </head>
 <body>
 <th:block layout:fragment="content">
-
-    <!-- Start All Title Box -->
     <div class="all-title-box">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
-                    <h2>결제</h2>
+                    <h2>주문/결제</h2>
                     <ul class="breadcrumb">
                         <li class="breadcrumb-item"><a th:href="@{/home}">Home</a></li>
-                        <li class="breadcrumb-item active">Checkout</li>
+                        <li class="breadcrumb-item active">Purchase</li>
                     </ul>
                 </div>
             </div>
@@ -34,100 +32,98 @@
                         <div class="title-left">
                             <h3>주문자 정보</h3>
                         </div>
-                        <form class="needs-validation" novalidate>
+                            <div class="d-flex">
+                                <h5 th:text="아이디"/>
+                                <input type="hidden" class="form-control" id="username" th:value="${member.username}">
+                                <h5 class="ml-auto font-weight-bold" th:text="${member.username}"/>
+                            </div>
+                            <div class="d-flex">
+                                <h5 th:text="핸드폰번호"/>
+                                <h5 class="ml-auto font-weight-bold" th:text="${member.phone}"/>
+                            </div>
+                            <div class="d-flex">
+                                <h5 th:text="이메일"/>
+                                <h5 class="ml-auto font-weight-bold" th:text="${member.email}"/>
+                            </div>
+                        <br>
+                        <div class="title-left">
+                            <h3>배송 정보</h3>
+                        </div>
+                        <form id="purchaseForm" class="needs-validation" novalidate>
+                            <div id="infoAddress">
                             <div class="mb-3">
                                 <label for="name">이름 *</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="name" placeholder="" required>
-                                    <div class="invalid-feedback" style="width: 100%;"> Your username is required. </div>
+                                    <input type="hidden" class="form-control" id="info-name" th:value="${member.name}">
+                                    <input type="text" class="form-control" id="name" required>
                                 </div>
                             </div>
                             <div class="mb-3">
                                 <label for="email">이메일 *</label>
-                                <input type="email" class="form-control" id="email" placeholder="">
-                                <div class="invalid-feedback"> Please enter a valid email address for shipping updates. </div>
+                                <input type="hidden" class="form-control" id="info-email" th:value="${member.email}">
+                                <input type="text" class="form-control" id="email" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="email">핸드폰번호 *</label>
+                                <input type="hidden" class="form-control" id="info-phone" th:value="${member.phone}">
+                                <input type="text" class="form-control" id="phone" required>
                             </div>
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="zip_num">우편번호 *</label>
-                                    <input type="text" class="form-control" id="zip_num" placeholder="" required>
-                                    <div class="invalid-feedback"> Zip code required. </div>
+                                    <input type="hidden" class="form-control" id="info-zip_num" th:value="${member.zip_num}">
+                                    <input type="text" class="form-control" id="zip_num" required>
+                                    <input type="button" class="btn btn-primary rounded submit" onclick="findAddress()" value="우편번호 찾기"><br>
                                 </div>
                             </div>
                             <div class="mb-3">
                                 <label for="address">주소 *</label>
-                                <input type="text" class="form-control" id="address" placeholder="" required>
-                                <div class="invalid-feedback"> Please enter your shipping address. </div>
+                                <input type="hidden" class="form-control" id="info-address" name="info-address" th:value="${address.addr1}">
+                                <input type="text" class="form-control" id="address" name="address" required>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="detailAddress">상세주소 *</label>
+                                    <input type="hidden" class="form-control" id="info-address2" name="info-address" th:value="${address.addr2}">
+                                    <input type="text" class="form-control" id="detailAddress" name="address" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="extraAddress"></label>
+                                    <input type="hidden" class="form-control" id="info-address3" name="info-address" th:value="${address.addr3}">
+                                    <input type="text" class="form-control" id="extraAddress" name="address" placeholder="참고사항">
+                                </div>
+                            </div>
                             </div>
                             <div class="mb-3">
-                                <label for="address2">상세주소 *</label>
-                                <input type="text" class="form-control" id="address2" placeholder="">
-                            </div>
-                            <div class="mb-3">
-                                <label for="comment">배송시 요청사항 *</label>
-                                <input type="text" class="form-control" id="comment" placeholder="">
+                                <label for="p_comment">배송시 요청사항</label>
+                                <input type="text" class="form-control" id="p_comment" placeholder="예시) 문 앞에 놓고 가세요.">
                             </div>
                             <hr class="mb-4">
                             <div class="custom-control custom-checkbox">
                                 <input type="checkbox" class="custom-control-input" id="same-address">
-                                <label class="custom-control-label" for="same-address">Shipping address is the same as my billing address</label>
-                            </div>
-                            <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="save-info">
-                                <label class="custom-control-label" for="save-info">Save this information for next time</label>
+                                <label class="custom-control-label" for="same-address">기존 정보 가져오기</label>
                             </div>
                             <hr class="mb-4">
                             <div class="title"> <span>결제수단</span> </div>
                             <div class="d-block my-3">
                                 <div class="custom-control custom-radio">
-                                    <input id="credit" name="paymentMethod" type="radio" class="custom-control-input" checked required>
-                                    <label class="custom-control-label" for="credit">Credit card</label>
+                                    <input id="kakaopay" name="paymentMethod" th:value="1" type="radio" class="custom-control-input" checked>
+                                    <label class="custom-control-label" for="kakaopay">카카오페이</label>
                                 </div>
                                 <div class="custom-control custom-radio">
-                                    <input id="debit" name="paymentMethod" type="radio" class="custom-control-input" required>
-                                    <label class="custom-control-label" for="debit">Debit card</label>
-                                </div>
-                                <div class="custom-control custom-radio">
-                                    <input id="paypal" name="paymentMethod" type="radio" class="custom-control-input" required>
-                                    <label class="custom-control-label" for="paypal">Paypal</label>
+                                    <input id="deposit" name="paymentMethod" th:value="2" type="radio" class="custom-control-input" required>
+                                    <label class="custom-control-label" for="deposit">무통장입금</label>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row" id="inputPayer" style="display:none;">
                                 <div class="col-md-6 mb-3">
                                     <label for="payer">입금자명</label>
-                                    <input type="text" class="form-control" id="payer" placeholder="" required> <small class="text-muted">Full name as displayed on card</small>
-                                    <div class="invalid-feedback"> Name on card is required </div>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="cc-number">Credit card number</label>
-                                    <input type="text" class="form-control" id="cc-number" placeholder="" required>
-                                    <div class="invalid-feedback"> Credit card number is required </div>
+                                    <input type="text" class="form-control" id="payer" placeholder="" required>
+                                    <h5>신한은행&nbsp;&nbsp;110-3456-78900&nbsp;&nbsp;&nbsp;레시푸드</h5>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-3 mb-3">
-                                    <label for="cc-expiration">Expiration</label>
-                                    <input type="text" class="form-control" id="cc-expiration" placeholder="" required>
-                                    <div class="invalid-feedback"> Expiration date required </div>
-                                </div>
-                                <div class="col-md-3 mb-3">
-                                    <label for="cc-expiration">CVV</label>
-                                    <input type="text" class="form-control" id="cc-cvv" placeholder="" required>
-                                    <div class="invalid-feedback"> Security code required </div>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <div class="payment-icon">
-                                        <ul>
-                                            <li><img class="img-fluid" src="images/payment-icon/1.png" alt=""></li>
-                                            <li><img class="img-fluid" src="images/payment-icon/2.png" alt=""></li>
-                                            <li><img class="img-fluid" src="images/payment-icon/3.png" alt=""></li>
-                                            <li><img class="img-fluid" src="images/payment-icon/5.png" alt=""></li>
-                                            <li><img class="img-fluid" src="images/payment-icon/7.png" alt=""></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <hr class="mb-1"> </form>
+                            <hr class="mb-1">
+                        </form>
                     </div>
                 </div>
                 <div class="col-sm-6 col-lg-6 mb-3">
@@ -141,6 +137,7 @@
                                     <div class="custom-control custom-radio">
                                         <input id="shippingOption1" name="shipping-option" class="custom-control-input" checked="checked" type="radio">
                                         <label class="custom-control-label" for="shippingOption1">CJ대한통운</label> <span class="float-right font-weight-bold">무료배송</span>
+                                        <div class="ml-4 mb-2 small">주문한 상품은 결제완료 후 3일 이내 출고 됩니다.(토, 공휴일 제외)</div>
                                     </div>
                                 </div>
                             </div>
@@ -152,8 +149,12 @@
                                 </div>
                                 <div class="rounded p-2 bg-light">
                                     <div class="media mb-2">
-                                        <div class="media-body"> <a href="detail.html"> Lorem ipsum dolor sit amet</a>
-                                            <div class="small text-muted">Price: $40.00 <span class="mx-2">|</span> Qty: 1 <span class="mx-2">|</span> Subtotal: $40.00</div>
+                                        <div class="media-body"><p th:text="${funding.funding_name}"/>
+                                            <input type="hidden" class="form-control" id="funding_seq" name="funding_seq" th:value="${funding.funding_seq}">
+                                            <input type="hidden" class="form-control" id="funding_name" name="funding_name" th:value="${funding.funding_name}">
+                                            <input type="hidden" class="form-control" id="quantity" name="quantity" th:value="${quantity}">
+                                            <input type="hidden" class="form-control" id="funding_amount" name="funding_amount" th:value="${funding.price*quantity}">
+                                            <div class="small text-muted">가격:&nbsp;<p th:text="${#numbers.formatInteger(funding.price,0,'COMMA')}"/><span class="mx-2">|</span> 수량: <p th:text="${quantity}"/><span class="mx-2">|</span> 합계: <p th:text="${#numbers.formatInteger(funding.price*quantity,0,'COMMA')}"/></div>
                                         </div>
                                     </div>
                                 </div>
@@ -165,46 +166,321 @@
                                     <h3>결제상세</h3>
                                 </div>
                                 <div class="d-flex">
-                                    <div class="font-weight-bold">Product</div>
                                     <div class="ml-auto font-weight-bold">합계</div>
                                 </div>
                                 <hr class="my-1">
                                 <div class="d-flex">
-                                    <h4>Sub Total</h4>
-                                    <div class="ml-auto font-weight-bold"> $ 440 </div>
+                                    <h4>전체 상품금액</h4>
+                                    <div class="ml-auto font-weight-bold"> ₩<p th:text="${#numbers.formatInteger(funding.price*quantity,0,'COMMA')}"/></div>
                                 </div>
                                 <div class="d-flex">
-                                    <h4>Discount</h4>
-                                    <div class="ml-auto font-weight-bold"> $ 40 </div>
-                                </div>
-                                <hr class="my-1">
-                                <div class="d-flex">
-                                    <h4>Coupon Discount</h4>
-                                    <div class="ml-auto font-weight-bold"> $ 10 </div>
-                                </div>
-                                <div class="d-flex">
-                                    <h4>Tax</h4>
-                                    <div class="ml-auto font-weight-bold"> $ 2 </div>
-                                </div>
-                                <div class="d-flex">
-                                    <h4>Shipping Cost</h4>
-                                    <div class="ml-auto font-weight-bold"> Free </div>
+                                    <h4>배송비</h4>
+                                    <div class="ml-auto font-weight-bold"> ₩0</div>
                                 </div>
                                 <hr>
                                 <div class="d-flex gr-total">
                                     <h5>총 결제금액</h5>
-                                    <div class="ml-auto h5"> $ 388 </div>
+                                    <div class="ml-auto h5" id="amount"> ₩<p th:text="${#numbers.formatInteger(funding.price*quantity,0,'COMMA')}"/></div>
                                 </div>
-                                <hr> </div>
+                                <hr>
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="agree" th:value="y">
+                                    <label class="custom-control-label" for="agree">주문 내용을 확인하였으며, 정보 제공 등에 동의합니다.</label>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-12 d-flex shopping-box"> <a href="checkout.html" class="ml-auto btn hvr-hover">구매</a> </div>
+                        <div class="col-12 d-flex shopping-box"> <a class="ml-auto btn hvr-hover" id="requestPay">결제</a> </div>
+                        <div class="col-12 d-flex shopping-box"> <a style="display:none;" class="ml-auto btn hvr-hover" id="requestPay2">결제</a> </div>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
-    <!-- End Cart -->
 </th:block>
 </body>
+<th:block layout:fragment="script">
+<script src="main/js/jquery-3.2.1.min.js"></script>
+<script src="main/js/popper.min.js"></script>
+<script src="main/js/bootstrap.min.js"></script>
+<!-- ALL PLUGINS -->
+<script src="main/js/jquery.superslides.min.js"></script>
+<script src="main/js/bootstrap-select.js"></script>
+<script src="main/js/inewsticker.js"></script>
+<script src="main/js/bootsnav.js."></script>
+<script src="main/js/images-loded.min.js"></script>
+<script src="main/js/isotope.min.js"></script>
+<script src="main/js/owl.carousel.min.js"></script>
+<script src="main/js/baguetteBox.min.js"></script>
+<script src="main/js/form-validator.min.js"></script>
+<script src="main/js/contact-form-script.js"></script>
+<script src="main/js/custom.js"></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script src="https://cdn.iamport.kr/js/iamport.payment-1.1.8.js"></script>
+<script>
+    $(function () { // 기존 멤버 정보 불러오기
+        $('#same-address').on('click', function () {
+            var same = this.checked;
+            $("#name").val(same ? $('#info-name').val():'');
+            $("#phone").val(same ? $('#info-phone').val():'');
+            $("#email").val(same ? $('#info-email').val():'');
+            $("#zip_num").val(same ? $('#info-zip_num').val():'');
+            $("#address").val(same ? $('#info-address').val():'');
+            $("#detailAddress").val(same ? $('#info-address2').val():'');
+            $("#extraAddress").val(same ? $('#info-address3').val():'');
+
+            if(same == true) {
+                $('#infoAddress input').filter('input:text')
+                    // .attr('readonly', true).css('opacity', 0.5);
+            } else {
+                $('#infoAddress input').filter('input:text')
+                    // .attr('readonly', false).css('opacity', 1);
+            }
+        });
+    });
+
+    $(function (){ // 입금자명 입력칸, 구매버튼 숨기기
+        $('input[type="radio"][name="paymentMethod"]').on('click', function(){
+            switch (this.id){
+                case "kakaopay":
+                    $('#inputPayer').hide();
+                    $('#requestPay2').hide();
+                    $('#requestPay').show();
+                    break;
+                case "deposit":
+                    $('#inputPayer').show();
+                    $('#requestPay2').show();
+                    $('#requestPay').hide();
+                    break;
+                default:
+                    break;
+            }
+        });
+    });
+
+    function findAddress() { // 우편번호 찾기
+        new daum.Postcode({
+            oncomplete: function(data) {
+                var addr = '';
+                var extraAddr = '';
+
+                if (data.userSelectedType === 'R') {
+                    addr = data.roadAddress;
+                } else {
+                    addr = data.jibunAddress;
+                }
+
+                if(data.userSelectedType === 'R'){
+
+                    if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+                        extraAddr += data.bname;
+                    }
+                    if(data.buildingName !== '' && data.apartment === 'Y'){
+                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                    }
+                    if(extraAddr !== ''){
+                        extraAddr = ' (' + extraAddr + ')';
+                    }
+                    document.getElementById("extraAddress").value = extraAddr;
+
+                } else {
+                    document.getElementById("extraAddress").value = '';
+                }
+
+                document.getElementById('zip_num').value = data.zonecode;
+                document.getElementById("address").value = addr;
+                document.getElementById("detailAddress").focus();
+            }
+        }).open();
+    }
+
+    $(function () { // 카카오페이 결제
+
+        $('#requestPay').on('click', function () {
+            if ($("#name").val() == "") {
+                alert("이름을 입력해 주세요");
+                $("#name").focus();
+                return false;
+            } else if ($("#phone").val() == "") {
+                alert("핸드폰 번호를 입력해 주세요.");
+                $("#phone").focus();
+                return false;
+            } else if ($("#email").val() == "") {
+                alert("이메일 주소를 입력해 주세요.");
+                $("#email").focus();
+                return false;
+            } else if ($("#zip_num").val() == "") {
+                alert("우편번호를 입력해 주세요");
+                $("#zip_num").focus();
+                return false;
+            } else if ($("#address").val() == "") {
+                alert("주소를 입력해 주세요.");
+                $("#address").focus();
+                return false;
+            } else if ($('#agree').is(':checked') == false) {
+                alert("결제 정보 제공에 동의해 주세요.");
+            } else {
+                IMP.init("imp00441734"); // 가맹점 식별코드
+
+                const funding_seq = $("#funding_seq").val();
+                const funding_amount = $("#funding_amount").val();
+                const funding_name = $("#funding_name").val();
+                const username = $("#username").val();
+                const quantity = $("#quantity").val();
+                const name = $("#name").val();
+                const email = $("#email").val();
+                const phone = $("#phone").val();
+                const zip_num = $("#zip_num").val();
+                const p_comment = $("#p_comment").val(); // 배송요청사항
+                const payment = $("#kakaopay").val();
+                const agree = $("#agree").val();
+
+                var param = [];
+                var address = $("[name='address']");
+
+                for(var i=0; i<address.length; i++) {
+                    param.push(address[i].value);
+                }
+
+                var getAddress = '';
+
+                param.map(function (item){
+                    getAddress += item + ',';
+                });
+                getAddress = getAddress.substring(0, getAddress.lastIndexOf(','));
+
+                IMP.request_pay({
+                    pg: 'kakaopay',
+                    pay_method: 'card',
+                    merchant_uid: 'recifood_' + new Date().getTime(),
+                    name: funding_name,
+                    amount: funding_amount,
+                    buyer_email: email,
+                    buyer_name: name,
+                    buyer_tel: phone,
+                }, function (rsp) { // callback
+                    if (rsp.success) {
+                        jQuery.ajax({
+                            url: '/insertPurchase',
+                            type: 'POST',
+                            contentType: 'application/json',
+                            data: JSON.stringify({
+                                'funding_seq' : funding_seq,
+                                'funding_name' : funding_name,
+                                'purchase_uid' : rsp.merchant_uid,
+                                'quantity' : quantity,
+                                'price' : funding_amount,
+                                'username' : username,
+                                'name' : name,
+                                'phone' : phone,
+                                'email' : email,
+                                'address' : getAddress,
+                                'zip_num' : zip_num,
+                                'p_comment' : p_comment,
+                                'payment' : payment,
+                                'agree' : agree
+                            })
+                        });
+                        console.log(rsp);
+                        document.location.href = "/success"; // 결제 성공시 이동 페이지
+                    } else {
+                        console.log(rsp);
+                        document.location.href = "/fail"; // 결제 실패시 이동 페이지
+                    }
+                });
+            }
+        });
+    });
+
+    $(function () { // 무통장입금
+
+        $('#requestPay2').on('click', function () {
+            if ($("#name").val() == "") {
+                alert("이름을 입력해 주세요");
+                $("#name").focus();
+                return false;
+            } else if ($("#phone").val() == "") {
+                alert("핸드폰 번호를 입력해 주세요.");
+                $("#phone").focus();
+                return false;
+            } else if ($("#email").val() == "") {
+                alert("이메일 주소를 입력해 주세요.");
+                $("#email").focus();
+                return false;
+            } else if ($("#zip_num").val() == "") {
+                alert("우편번호를 입력해 주세요");
+                $("#zip_num").focus();
+                return false;
+            } else if ($("#address").val() == "") {
+                alert("주소를 입력해 주세요.");
+                $("#address").focus();
+                return false;
+            } else if ($("#payer").val() == "") {
+                alert("입금자명을 입력해 주세요.");
+                $("#payer").focus();
+                return false;
+            } else if ($('#agree').is(':checked') == false) {
+                alert("결제 정보 제공에 동의해 주세요.");
+            } else {
+
+                const funding_seq = $("#funding_seq").val();
+                const funding_amount = $("#funding_amount").val();
+                const funding_name = $("#funding_name").val();
+                const username = $("#username").val();
+                const quantity = $("#quantity").val();
+                const name = $("#name").val();
+                const email = $("#email").val();
+                const phone = $("#phone").val();
+                const zip_num = $("#zip_num").val();
+                const p_comment = $("#p_comment").val(); // 배송요청사항
+                const payment = $("#deposit").val();
+                const payer = $("#payer").val();
+                const agree = $("#agree").val();
+
+                var param = [];
+                var address = $("[name='address']");
+
+                for(var i=0; i<address.length; i++) {
+                    param.push(address[i].value);
+                }
+
+                var getAddress = '';
+
+                param.map(function (item){
+                    getAddress += item + ',';
+                });
+                getAddress = getAddress.substring(0, getAddress.lastIndexOf(','));
+
+
+                jQuery.ajax({
+                    url: '/insertPurchase',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        'funding_seq': funding_seq,
+                        'funding_name': funding_name,
+                        'purchase_uid': 'recifood_' + new Date().getTime(),
+                        'quantity': quantity,
+                        'price': funding_amount,
+                        'username': username,
+                        'name': name,
+                        'phone': phone,
+                        'email': email,
+                        'address': getAddress,
+                        'zip_num': zip_num,
+                        'p_comment': p_comment,
+                        'payment' : payment,
+                        'payer' : payer,
+                        'agree': agree
+                    }),
+                    success: function (data) {
+                        document.location.href = "/success"; // 결제 성공시 이동 페이지
+                    }, error: function () {
+                        document.location.href = "/fail"; // 결제 실패시 이동 페이지
+                    }
+                });
+            }
+        });
+    });
+</script>
+</th:block>
 </html>

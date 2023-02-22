@@ -2,6 +2,8 @@ package com.ezen.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 import com.ezen.entity.Funding;
 
 public interface FundingService {
@@ -11,23 +13,27 @@ public interface FundingService {
 	
 	void deleteFunding(Funding funding);
 	
-	List<Funding> getAllFundingList(Funding funding);
+	Page<Funding> getAllFundingList(Funding funding, int page);
 	
-	List<Funding> getAllFundingListByKind(String kind);
+	List<Funding> getAllFundingListCart(Funding funding);
 	
-	List<Funding> getAllFundingListByPrice(Funding funding);
+	Page<Funding> getAllFundingListByKind(String kind, int page);
 	
-	List<Funding> getAllFundingListByVC(Funding funding);
+	Page<Funding> getAllFundingListByPrice(Funding funding, int page);
 	
-	List<Funding> getMyFundingList(String username);
+	Page<Funding> getAllFundingListByVC(Funding funding, int page);
 	
-	List<Funding> getMyFundingListByKind(String username, String kind);
+	Page<Funding> getMyFundingList(String username, int page);
+	
+	Page<Funding> getMyFundingListByKind(String username, String kind, int page);
 	
 	Funding getFunding(Funding funding);
 	
 	void updateResult(Long recipe_seq);
 	
-	int updateViewCount(Long funding_seq);
+	void updateResultTwo(Long recipe_seq);
+	
+	int updateViewCount(Long recipe_seq);
 	
 	List<Funding> getBestFundingList(Funding funding);
 }

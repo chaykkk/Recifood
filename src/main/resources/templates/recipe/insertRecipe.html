@@ -27,8 +27,6 @@
    <link rel="stylesheet" href="/food/css/responsive.css">
    <!-- fevicon -->
    <link rel="icon" href="images/fevicon.png" type="image/gif" />
-   <!-- Scrollbar Custom CSS -->
-   <link rel="stylesheet" href="/food/css/jquery.mCustomScrollbar.min.css">
    <!-- Tweaks for older IEs-->
    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
    <!-- fonts -->
@@ -38,53 +36,191 @@
    <link rel="stylesheet" href="/food/css/owl.theme.default.min.css">
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css"
       media="screen">
+    <style>
+   .success {
+        background-color:  #24b96f  !important;
+    }
+    
+    .danger {
+        background-color: #ff5722 !important;
+    }
+   </style>
      </th:block>
 </head>
 
 <body>
 <th:block layout:fragment="content">
-<form th:action="@{/insertRecipe}" method="post" enctype="multipart/form-data">
+<form th:action="@{/insertRecipe}" method="post" id="theForm" enctype="multipart/form-data" accept-charset="UTF-8">
 <center>
 <div class="contact_section layout_padding" style="background-color: white">
       <div class="container">
          <h1 class="contact_taital">레시피 등록</h1>
          <div class="email_text">
-          <div class="form-group">
-            레시피 카테고리<input style="text-align: center" class="email-bt" type="text" name="kind" placeholder="ex)한식/양식/디저트">
+         	<div class="form-group">
+            완성사진<input class="email-bt" type="file" id="final_image" name="file">
+            </div>
+         	<div class="form-group">
+            레시피 카테고리<input style="text-align: center" class="email-bt" type="text" id="kind" name="kind" placeholder="ex)한식/양식/디저트">
             </div>
             <div class="form-group">
-            레시피명<input style="text-align: center" class="email-bt" type="text" name="recipe_name">
+            레시피명<input style="text-align: center" class="email-bt" type="text" id="recipe_name" name="recipe_name">
             </div>
             <div class="form-group">
-            레시피 설명<textarea class="email-bt" style="text-align: center" name="content"></textarea>
+            레시피 설명<textarea class="email-bt" style="text-align: center" id="content" name="content"></textarea>
             </div>
             <div class="form-group">
-           	재료<textarea class="email-bt" style="text-align: center" name="ingredient" rows="8" placeholder="ex)감자 200g"></textarea>
+            요리시간(분단위)<input style="text-align: center" class="email-bt" type="text" id="cooking_time" name="cooking_time" placeholder="ex)5/10/15/20">
             </div>
             <div class="form-group">
-            요리시간(분단위)<input style="text-align: center" class="email-bt" type="text" name="cooking_time" placeholder="ex)5/10/15/20">
+            분량<input style="text-align: center" class="email-bt" type="text" id="amount" name="amount" placeholder="ex)2/4/6/8">
             </div>
             <div class="form-group">
-            분량<input style="text-align: center" class="email-bt" type="text" name="amount" placeholder="ex)2/4/6/8">
+           	 난이도<input style="text-align: center" class="email-bt" type="text" id="degree" name="degree" placeholder="ex)상/중/하">
             </div>
             <div class="form-group">
-           	 난이도<input style="text-align: center" class="email-bt" type="text" name="degree" placeholder="ex)상/중/하">
+           	재료<textarea class="email-bt" style="text-align: center" id="ingredient" name="ingredient" rows="8" placeholder="ex)감자 200g"></textarea>
             </div>
             <div class="form-group">
-           	조리방법<textarea class="email-bt" style="text-align: center" name="procedure" rows="8" placeholder="1. 고기를 볶는다."></textarea>
-            </div>
-            <div class="form-group">
-            완성사진<input class="email-bt" type="file" name="file">
+           	조리과정<center>
+           	<table class="email-bt" style="text-align: center">
+            <tr style="text-align: center">
+            <thead>
+            <tr>
+            <th>사진</th>
+            <th>설명</th>
+            <th><button class="success" onclick="return add_tr('table_body');">추가</button></th>
+            </tr>
+            </thead>
+            <tbody id="table_body">
+            <tr>
+            <td width="250px" height="100px"><input class="recipe_img" type="file" name="file"></td>
+            <td><textarea class="email-bt cook" style="text-align: center" name="procedure" id="procedure" rows="2" placeholder="ex) 1. 감자를 썰어주세요."></textarea></td>
+            <td><button class="danger" onclick="return remove_tr(this);">삭제</button></td>
+            </tr>
+            </tbody>
+            </table>
+            </center>
             </div>
             <br>
-            <div class="send_btn"><a><button type="submit">등록</button></a></div>
+            <div class="send_btn"><a><button type="button" id="submit">등록</button></a></div>
             <div class="send_btn"><a th:href="@{/myRecipeList}">취소</a></div>
          </div>
       </div>
    </div>
  </center>
-</form>
-
+ </form>
 </th:block>
 </body>
+<th:block layout:fragment="script">
+<script type="text/javascript" src="/food/js/jquery.min.js"></script>
+<script type="text/javascript">
+function add_tr(table_id) {//행 추가
+    let table_body = document.getElementById(table_id);
+    let first_tr   = table_body.firstElementChild;
+    let tr_clone   = first_tr.cloneNode(true);//*1)복제된 node 반환
+
+    table_body.append(tr_clone);
+    clean_first_tr(table_body.firstElementChild);
+    
+    return false;
+}
+
+function clean_first_tr(firstTr) {//값 초기화
+    let children = firstTr.children;//*2) 자식 요소가 포함된 HTMLCollection을 반환
+    
+    children = Array.isArray(children) ? children : Object.values(children);//*3)
+    children.forEach(x=>{
+        if(x !== firstTr.lastElementChild){//마지막child가 아닐때
+            x.firstElementChild.value = '';//td의 첫번째 child > input값 초기화
+        }
+    });
+}
+
+function remove_tr(This) {//행 삭제
+    //*4)closet:현재 엘리멘트에서 가장 가까운 조상을 반환
+    if(This.closest('tbody').childElementCount == 1)
+    {
+        alert("삭제할 수 없습니다.");
+    }else{
+        This.closest('tr').remove();//삭제
+    }
+    
+    return false;
+}
+</script>
+<script>
+$(document).ready(function() {
+	$("#submit").click(function() {
+		var formData = new FormData(); // 변수 선언
+		const imageInput = $("#final_image")[0];
+		var result = "";
+		var kind = $("#kind").val();
+		var recipe_name = $("#recipe_name").val();
+		var content = $("#content").val();
+		var cooking_time = $("#cooking_time").val();
+		var amount = $("#amount").val();
+		var degree = $("#degree").val();
+		var ingredient = $("#ingredient").val();
+		
+
+		if (imageInput.files.length === 0) {
+			alert("레시피 이미지를 선택해 주세요.");
+			return;
+		}
+		
+		// 텍스트 데이터 저장
+		var elements = $(".cook");
+		elements.each(function() {
+			result = result.concat($(this).val(), '@');
+		});
+		console.log("조리과정=", result);
+		var fileInput = $(".recipe_img");
+		for (var i=0; i<fileInput.length; i++) {
+			if (fileInput[i].files.length > 0) {
+				for(var j=0; j<fileInput[i].files.length; j++) {
+					console.log("fileInput[i].files[j] =>" + fileInput[i].files[j]);
+					
+					formData.append('file', $(".recipe_img")[i].files[j]);
+				}		
+			}
+		}
+		console.log("result=", result);
+		
+		formData.append("process", new Blob([result], {type : "application/json"}));
+		
+		// 레시피 데이터 조립
+		formData.append("recipe_img", imageInput.files[0]);
+		formData.append("kind", new Blob([kind], {type : "application/json"})); // 텍스트는 이진데이터(Blob)로 변환, 이미지는 이미 이진테이터라 변환필요 x
+		formData.append("recipe_name", new Blob([recipe_name], {type : "application/json"}));
+		formData.append("content", new Blob([content], {type : "application/json"}));
+		formData.append("cooking_time", new Blob([cooking_time], {type : "application/json"}));
+		formData.append("amount", new Blob([amount], {type : "application/json"}));
+		formData.append("degree", new Blob([degree], {type : "application/json"}));
+		formData.append("ingredient", new Blob([ingredient], {type : "application/json"}));
+	
+		jQuery.ajaxSettings.traditional = true;
+		
+		$.ajax({
+			enctype : 'multipart/form-data',
+			url: '/insertRecipe',
+			type: 'post',
+			data: formData, // 이진 데이터 전송
+			contentType: false,
+			processData : false,
+			success: function(data) {
+					 myRecipeList();
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				console.log('레시피 등록 실패! 다시 등록해주세요.');
+			}
+		});
+		
+	});
+});
+
+function myRecipeList() {
+	window.location.replace("/myRecipeList");
+}
+</script>
+</th:block>
 </html>

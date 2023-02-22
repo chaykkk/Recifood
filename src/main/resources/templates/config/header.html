@@ -85,12 +85,15 @@
                     <!-- Start Atribute Navigation -->
                    <div class="attr-nav">
                     <ul>
-                        <a th:if="${session.loginMember == null}" href="/login">login</a>&nbsp;&nbsp;
-                        <a th:if="${session.loginMember == null}" href="/join">join</a>
-                        <a th:if="${session.loginMember != null}" href="/logout">logout</a>&nbsp;&nbsp;
-                            <span th:if="${session.loginMember != null}">
-                              <a href="/mypage">myPage</a> 
-                            </span>
+                        <div th:if="${session.loginMember == null}">
+                        <a href="/login">login</a>&nbsp;&nbsp;
+                        <a href="/join">join</a>
+                        </div>
+                        <div th:if="${session.loginMember != null}" >
+                        <a href="/logout">logout</a>&nbsp;&nbsp;
+                        <a th:if="${session.loginMember.role.toString().equals('MEMBER')}" href="/mypage">mypage</a>
+                        <a th:if="${session.loginMember.role.toString().equals('ADMIN')}" href="/adminPage">admin</a>
+                        </div>
                     </ul>
                 </div>
                     <!-- End Atribute Navigation -->
