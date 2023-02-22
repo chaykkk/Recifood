@@ -53,14 +53,14 @@
                   <th>삭제</th>
                 </tr>
                 </thead>
-                <tr th:each="food, state : ${foodList}">
+                <tr th:each="food, state : ${food}">
                   <td class="remove-pr">
                     <p th:text="${food.category}" th:align="center"/>
                   </td>
                   <td class="remove-pr">
                     <a th:href="@{/getFood(food_seq=${food.food_seq})}" th:text="${food.name}"></a>
                   </td>
-                  <td class="total-pr">
+                  <td class="remove-pr">
                     <p th:text="${#dates.format(food.exp, 'yyyy-MM-dd')}" th:align="center"/>
                   </td>
                   <td class="remove-pr">
@@ -69,6 +69,31 @@
                 </tr>
               </table>
             </div><br><br>
+            <!-- 페이징 처리 -->
+            <div th:if="${!food.isEmpty()}">
+              <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${!food.hasPrevious()} ? 'disabled'">
+                  <a class="page-link" th:href="@{|?page=${food.number}|}">
+                    <span>이전</span>
+                  </a>
+                </li>
+                <li th:each="page: ${#numbers.sequence(1, food.getTotalPages())}"
+                    th:if="${page >= food.number-4 and page <= food.number+6}"
+                    th:classappend="${page == food.number+1} ? 'active'"
+                    class="page-item">
+<!--                  <a th:text="${page}" class="page-link" th:href="@{|?page=${page}|}"></a>-->
+                  <a th:text="${page}" class="page-link" th:href="@{foodList(page=${page})}"></a>
+                </li>
+
+                <li class="page-item" th:classappend="${!food.hasNext()} ? 'disabled'">
+                  <a class="page-link" th:href="@{foodList(page=${food.number+2})}">
+                    <span>다음</span>
+                  </a>
+                </li>
+              </ul>
+              <br><br>
+            </div>
+              <!-- 페이징 처리 -->
           </div>
         </div>
         <div class="row my-5">

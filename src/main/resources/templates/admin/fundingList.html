@@ -14,10 +14,10 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-12">
-            <h2>회원 목록</h2>
+            <h2>펀딩 목록</h2>
             <ul class="breadcrumb">
               <li class="breadcrumb-item"><a href="home">Home</a></li>
-              <li class="breadcrumb-item active">Members</li>
+              <li class="breadcrumb-item active">Funding</li>
             </ul>
           </div>
         </div>
@@ -33,15 +33,14 @@
               <!-- 검색창 -->
               <div>
                   <div>
-                      <form th:action="@{/allMemberList}">
+                      <form th:action="@{/allFundingList}">
                           <table th:align="center" th:cellpadding="5" th:cellspacing="5" th:width="880">
                               <tr>
                                   <td th:align="right">
                                       <select class="nav-link dropdown-toggle arrow" data-toggle="dropdown" name="searchCondition">
                                           <option placeholder="">Category</option>
                                           <option th:value="USERNAME">아이디</option>
-                                          <option th:value="NAME">이름</option>
-                                          <option th:value="EMAIL">이메일</option>
+                                          <option th:value="FUNDING_NAME">펀딩명</option>
                                       </select>
                                   </td>
                                   <td th:width="500">
@@ -69,53 +68,55 @@
                 <thead>
                 <tr th:align="center">
                   <th>아이디</th>
-                  <th>이름</th>
-                  <th>핸드폰번호</th>
-                  <th>이메일</th>
-                  <th>등급</th>
-                  <th>가입일</th>
+                  <th>카테고리</th>
+                  <th>밀키트 펀딩명</th>
+                  <th>등록일</th>
+                  <th>진행상태</th>
                 </tr>
                 </thead>
-                <tr th:each="member:${memberList}" th:align="center">
+                <tr th:each="funding:${fundingList}" th:align="center">
                   <td class="price-pr">
-                    <a th:href="@{/member(username=${member.username})}" th:text="${member.username}"/>
+                    <p th:text="${funding.member.username}"/>
                   </td>
                   <td class="price-pr">
-                    <p th:text="${member.name}"/>
+                    <p th:text="${funding.kind}"/>
                   </td>
                   <td class="price-pr">
-                    <p th:text="${member.phone}"/>
+                    <a th:href="@{/getFunding(funding_seq=${funding.funding_seq})}" th:text="${funding.funding_name}"/>
                   </td>
                   <td class="total-pr">
-                    <p th:text="${member.email}"/>
+                    <p th:text="${#dates.format(funding.regdate, 'yyyy-MM-dd')}"/>
                   </td>
-                  <td class="total-pr">
-                    <p th:text="${member.degree}"/>
-                  </td>
-                  <td class="name-pr">
-                    <p th:text="${#dates.format(member.regdate, 'yyyy-MM-dd')}"/>
-                  </td>
+                  <th:block th:if="${#dates.format(funding.startdate, 'yyyy-MM-dd')} > ${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd')}">
+                   	<td class="remove-pr"><a th:text="펀딩시작전"></a></td>
+                   </th:block>
+                   <th:block th:if="${#dates.format(funding.startdate, 'yyyy-MM-dd')} <= ${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd')} and ${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd')} <= ${#dates.format(funding.enddate, 'yyyy-MM-dd')}">
+                   	<td class="remove-pr"><a th:text="펀딩진행중"></a></td>
+                   </th:block>
+                   <th:block th:if="${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd')} > ${#dates.format(funding.enddate, 'yyyy-MM-dd')}">
+                   	<td class="remove-pr"><a th:text="펀딩종료"></a></td>
+                   </th:block>
                 </tr>
               </table>
             </div><br><br>
               <!-- 페이징 처리 -->
-            <div th:if="${!memberList.isEmpty()}">
+            <div th:if="${!fundingList.isEmpty()}">
               <ul class="pagination justify-content-center">
-                <li class="page-item" th:classappend="${!memberList.hasPrevious()} ? 'disabled'">
-                  <a class="page-link" th:href="@{allMemberList(page=${memberList.number})}">
+                <li class="page-item" th:classappend="${!fundingList.hasPrevious()} ? 'disabled'">
+                  <a class="page-link" th:href="@{allFundingList(page=${fundingList.number})}">
                     <span>이전</span>
                   </a>
                 </li>
-                <li th:each="page: ${#numbers.sequence(1, memberList.getTotalPages())}"
-                    th:if="${page >= memberList.number-4 and page <= memberList.number+6}"
-                    th:classappend="${page == memberList.number+1} ? 'active'"
+                <li th:each="page: ${#numbers.sequence(1, fundingList.getTotalPages())}"
+                    th:if="${page >= fundingList.number-4 and page <= fundingList.number+6}"
+                    th:classappend="${page == fundingList.number+1} ? 'active'"
                     class="page-item">
 <!--                  <a th:text="${page}" class="page-link" th:href="@{|?page=${page}|}"></a>-->
-                  <a th:text="${page}" class="page-link" th:href="@{allMemberList(page=${page})}"></a>
+                  <a th:text="${page}" class="page-link" th:href="@{allFundingList(page=${page})}"></a>
                 </li>
 
-                <li class="page-item" th:classappend="${!memberList.hasNext()} ? 'disabled'">
-                  <a class="page-link" th:href="@{allMemberList(page=${memberList.number+2})}">
+                <li class="page-item" th:classappend="${!fundingList.hasNext()} ? 'disabled'">
+                  <a class="page-link" th:href="@{allFundingList(page=${fundingList.number+2})}">
                     <span>다음</span>
                   </a>
                 </li>

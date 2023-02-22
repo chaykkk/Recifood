@@ -1,8 +1,9 @@
 package com.ezen.service;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
 
 import com.ezen.entity.Food;
+import com.ezen.entity.Search;
 
 public interface FoodService {
 	void insertFood(Food food);
@@ -11,14 +12,15 @@ public interface FoodService {
 	
 	void deleteFood(Food food);
 	
-	List<Food> getFoodList(String username);
+	Page<Food> getFoodList(String username, int page);
 	
 	Food getFood(Food food);
 	
-	List<Food> getFoodListUsernameAndCategory(String username, String category);
+	Page<Food> getFoodListUsernameAndCategory(String username, String category, int page);
 	
-	List<Food> getFoodListUsernameOrderByExpDESC(String username);
+	Page<Food> getFoodListUsernameOrderByExpDESC(String username, int page);
 	
-	List<Food> getFoodListUsernameOrderByExpASC(String username);
+	Page<Food> getFoodListUsernameOrderByExpASC(String username, int page);
 	
+	Page<Food> getFoodList(int page, Search search);
 }

@@ -14,10 +14,10 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-12">
-            <h2>회원 목록</h2>
+            <h2>식자재 목록</h2>
             <ul class="breadcrumb">
               <li class="breadcrumb-item"><a href="home">Home</a></li>
-              <li class="breadcrumb-item active">Members</li>
+              <li class="breadcrumb-item active">Food</li>
             </ul>
           </div>
         </div>
@@ -33,15 +33,15 @@
               <!-- 검색창 -->
               <div>
                   <div>
-                      <form th:action="@{/allMemberList}">
+                      <form th:action="@{/allFoodList}">
                           <table th:align="center" th:cellpadding="5" th:cellspacing="5" th:width="880">
                               <tr>
                                   <td th:align="right">
                                       <select class="nav-link dropdown-toggle arrow" data-toggle="dropdown" name="searchCondition">
                                           <option placeholder="">Category</option>
                                           <option th:value="USERNAME">아이디</option>
-                                          <option th:value="NAME">이름</option>
-                                          <option th:value="EMAIL">이메일</option>
+                                          <option th:value="CATEGORY">카테고리</option>
+                                          <option th:value="NAME">식자재명</option>
                                       </select>
                                   </td>
                                   <td th:width="500">
@@ -69,53 +69,45 @@
                 <thead>
                 <tr th:align="center">
                   <th>아이디</th>
-                  <th>이름</th>
-                  <th>핸드폰번호</th>
-                  <th>이메일</th>
-                  <th>등급</th>
-                  <th>가입일</th>
+                  <th>카테고리</th>
+                  <th>식자재명</th>
+                  <th>유통기한</th>
                 </tr>
                 </thead>
-                <tr th:each="member:${memberList}" th:align="center">
+                <tr th:each="food:${foodList}" th:align="center">
                   <td class="price-pr">
-                    <a th:href="@{/member(username=${member.username})}" th:text="${member.username}"/>
+                    <p th:text="${food.member.username}"/>
                   </td>
                   <td class="price-pr">
-                    <p th:text="${member.name}"/>
+                    <p th:text="${food.category}"/>
                   </td>
                   <td class="price-pr">
-                    <p th:text="${member.phone}"/>
+                    <a th:href="@{/getFood(food_seq=${food.food_seq})}" th:text="${food.name}"/>
                   </td>
                   <td class="total-pr">
-                    <p th:text="${member.email}"/>
-                  </td>
-                  <td class="total-pr">
-                    <p th:text="${member.degree}"/>
-                  </td>
-                  <td class="name-pr">
-                    <p th:text="${#dates.format(member.regdate, 'yyyy-MM-dd')}"/>
+                    <p th:text="${#dates.format(food.exp, 'yyyy-MM-dd')}"/>
                   </td>
                 </tr>
               </table>
             </div><br><br>
               <!-- 페이징 처리 -->
-            <div th:if="${!memberList.isEmpty()}">
+            <div th:if="${!foodList.isEmpty()}">
               <ul class="pagination justify-content-center">
-                <li class="page-item" th:classappend="${!memberList.hasPrevious()} ? 'disabled'">
-                  <a class="page-link" th:href="@{allMemberList(page=${memberList.number})}">
+                <li class="page-item" th:classappend="${!foodList.hasPrevious()} ? 'disabled'">
+                  <a class="page-link" th:href="@{allFoodList(page=${foodList.number})}">
                     <span>이전</span>
                   </a>
                 </li>
-                <li th:each="page: ${#numbers.sequence(1, memberList.getTotalPages())}"
-                    th:if="${page >= memberList.number-4 and page <= memberList.number+6}"
-                    th:classappend="${page == memberList.number+1} ? 'active'"
+                <li th:each="page: ${#numbers.sequence(1, foodList.getTotalPages())}"
+                    th:if="${page >= foodList.number-4 and page <= foodList.number+6}"
+                    th:classappend="${page == foodList.number+1} ? 'active'"
                     class="page-item">
 <!--                  <a th:text="${page}" class="page-link" th:href="@{|?page=${page}|}"></a>-->
-                  <a th:text="${page}" class="page-link" th:href="@{allMemberList(page=${page})}"></a>
+                  <a th:text="${page}" class="page-link" th:href="@{allFoodList(page=${page})}"></a>
                 </li>
 
-                <li class="page-item" th:classappend="${!memberList.hasNext()} ? 'disabled'">
-                  <a class="page-link" th:href="@{allMemberList(page=${memberList.number+2})}">
+                <li class="page-item" th:classappend="${!foodList.hasNext()} ? 'disabled'">
+                  <a class="page-link" th:href="@{allFoodList(page=${foodList.number+2})}">
                     <span>다음</span>
                   </a>
                 </li>

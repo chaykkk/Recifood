@@ -39,8 +39,13 @@
     <div class="container">
         <div class="col-lg-8 col-sm-12">
           <div class="contact-form-right">
-            <h2>GET IN TOUCH</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed odio justo, ultrices ac nisl sed, lobortis porta elit. Fusce in metus ac ex venenatis ultricies at cursus mauris.</p>
+            <div th:if="${session.loginMember.role.toString().equals('MEMBER')}">
+              <h2>BOARD</h2>
+            </div>
+            <div th:if="${session.loginMember.role.toString().equals('ADMIN')}">
+              <h2>NOTICE</h2>
+            </div>
+            <br>
               <div class="row">
                 <div class="col-md-12">
                   <div class="form-group">
@@ -61,7 +66,7 @@
                   </div>
                   <div class="submit-button text-center">
                     <button class="btn hvr-hover" id="submit" type="submit">등록</button>
-                    <button class="btn hvr-hover" type="button" th:onclick="|location.href='@{/boardList}'|">취소</button>
+                    <button class="btn hvr-hover" type="button" th:onclick="history.back()">취소</button>
                   </div>
                 </div>
               </div>

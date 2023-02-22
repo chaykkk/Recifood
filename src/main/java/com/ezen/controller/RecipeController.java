@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,6 +22,7 @@ import com.ezen.entity.Member;
 import com.ezen.entity.Recipe;
 import com.ezen.entity.RecipeProcedure;
 import com.ezen.entity.RecipeReply;
+import com.ezen.entity.Search;
 import com.ezen.persistence.HeartRepository;
 import com.ezen.service.HeartService;
 import com.ezen.service.RecipeProcedureService;
@@ -368,4 +370,18 @@ public class RecipeController {
 		}
 	}
 
+	@RequestMapping("/allRecipeList")
+    public String allRecipeList(@RequestParam(value = "page", defaultValue = "1") int page, Search search, Model model) {
+        if(search.getSearchCondition() == null) {
+            search.setSearchCondition("USERNAME");
+        }
+        if(search.getSearchKeyword() == null) {
+            search.setSearchKeyword("");
+        }
+        Page<Recipe> recipeList = recipeService.getRecipeList(page, search);
+
+        model.addAttribute("recipeList", recipeList);
+
+        return "admin/recipeList";
+    }
 }

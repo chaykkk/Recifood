@@ -17,4 +17,6 @@ public interface BoardService {
     Page<Board> getBoardList(int page, Search search);
 
     Page<Board> findByCategory(int page, String category);
+    
+    Page<Board> getMyBoardList(int page, String username);
 }

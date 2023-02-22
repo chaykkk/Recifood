@@ -1,8 +1,9 @@
 package com.ezen.service;
 
+import org.springframework.data.domain.Page;
+
 import com.ezen.entity.Member;
 import com.ezen.entity.Search;
-import org.springframework.data.domain.Page;
 
 public interface MemberService {
 

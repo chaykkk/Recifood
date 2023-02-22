@@ -10,7 +10,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.ezen.entity.Funding;
+import com.ezen.entity.QFunding;
+import com.ezen.entity.Search;
 import com.ezen.persistence.FundingRepository;
+import com.querydsl.core.BooleanBuilder;
 
 @Service
 public class FundingServiceImpl implements FundingService {
@@ -110,4 +113,18 @@ public class FundingServiceImpl implements FundingService {
 		return fundingRepo.findAll();
 	}
 
+	@Override
+	public Page<Funding> getFundingList(int page, Search search) {
+		BooleanBuilder builder = new BooleanBuilder();
+
+		QFunding qFunding = QFunding.funding;
+
+		if(search.getSearchCondition().equals("USERNAME")) {
+			builder.and(qFunding.member.username.like("%" + search.getSearchKeyword() + "%"));
+		} else if (search.getSearchCondition().equals("FUNDING_NAME")) {
+			builder.and(qFunding.funding_name.like("%" + search.getSearchKeyword() + "%"));
+		} 
+		Pageable pageable = PageRequest.of(page-1, 10, Sort.Direction.DESC, "regdate");
+		return fundingRepo.findAll(builder, pageable);
+	}
 }

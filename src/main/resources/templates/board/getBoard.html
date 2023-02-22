@@ -30,9 +30,14 @@
     <div class="container">
         <div class="col-lg-8 col-sm-12">
           <div class="contact-form-right">
-            <h2>GET IN TOUCH</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed odio justo, ultrices ac nisl sed, lobortis porta elit. Fusce in metus ac ex venenatis ultricies at cursus mauris.</p>
-            <form id="contactForm">
+            <div th:if="${board.category.toString().equals('2')}">
+              <h2>BOARD</h2>
+            </div>
+            <div th:if="${board.category.toString().equals('1')}">
+              <h2>NOTICE</h2>
+            </div>
+            <br>
+              <form id="contactForm">
               <input name="boardSeq" type="hidden" th:value="${board.boardSeq}"/>
               <input name="category" type="hidden" th:value="${board.category}"/>
               <div class="row">
@@ -61,7 +66,7 @@
                   </div>
                   <div class="submit-button text-center">
                     <button class="btn hvr-hover" type="button" th:if="${session.loginMember != null && session.loginMember.username.equals(board.member.username)}" th:onclick="|location.href='@{/updateBoard(boardSeq=${board.boardSeq})}'|">수정</button>
-                    <button class="btn hvr-hover" type="button" th:onclick="|location.href='@{/boardList}'|">뒤로</button>
+                    <button class="btn hvr-hover" type="button" th:onclick="history.back()">뒤로</button>
                   </div>
                 </div>
               </div>
@@ -69,8 +74,9 @@
           </div>
             <!-- 댓글 창 시작 -->
             <section class="mb-5">
-              <div class="card bg-light">
-                <div class="card-body">
+              <div>
+                <div>
+                  <br><br>
                   <h2>Comment</h2><br>
                   <!-- 댓글 -->
                   <tr th:each="boardRe:${boardReplyList}">

@@ -29,6 +29,7 @@ public class Cart {
 	private Long cart_seq;
 	
 	private int quantity; // 카트에 담긴 상품 개수
+	private int totalprice; // 상품 가격
 	@Column(insertable=false, updatable=false, columnDefinition = "date default sysdate")
 	private Date regdate;
 	

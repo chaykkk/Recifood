@@ -3,10 +3,10 @@ package com.ezen.persistence;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import com.ezen.entity.Member;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+
+import com.ezen.entity.Member;
 
 public interface MemberRepository extends JpaRepository<Member, String>, QuerydslPredicateExecutor<Member> {
     @Query(value = "select m from Member m where m.name=:name and m.email=:email")
@@ -17,4 +17,5 @@ public interface MemberRepository extends JpaRepository<Member, String>, Queryds
 
     @Query("select m from Member m")
     Page<Member> getMemberList(Pageable pageable);
+
 }

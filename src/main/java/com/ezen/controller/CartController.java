@@ -10,7 +10,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ezen.entity.Cart;
@@ -37,6 +36,8 @@ public class CartController {
 			List<CartDetail> cartList = cartService.getCartList(loginMember.getUsername());
 			
 			model.addAttribute("cartList", cartList);
+			//model.addAttribute("totalPrice", cart.getQuantity()*cart.getPrice());
+			//System.out.println(cart.getQuantity()*cart.getPrice());
 			return "sign/cartList";
 		}
 	}
@@ -53,6 +54,7 @@ public class CartController {
 			cart.setMember(member);
 			cart.setFunding(funding);
 			cart.setQuantity(Integer.parseInt(map.get("quantity")));
+			cart.setTotalprice(Integer.parseInt(map.get("quantity"))*Integer.parseInt(map.get("price")));
 			cartService.insertCart(cart);
 		}
 	
@@ -63,6 +65,7 @@ public class CartController {
 		System.out.println("funding_seq="+ map.get("funding_seq"));
 		System.out.println("member=" + map.get("username"));
 		System.out.println("quantity=" + map.get("quantity"));
+		System.out.println("price=" + map.get("price"));
 		
 		Member member = new Member();
 		member.setUsername(map.get("username"));
@@ -73,6 +76,8 @@ public class CartController {
 		cart.setMember(member);
 		cart.setFunding(funding);
 		cart.setQuantity(Integer.parseInt(map.get("quantity")));
+		cart.setTotalprice(Integer.parseInt(map.get("quantity"))*Integer.parseInt(map.get("price")));
+		System.out.println(cart.getTotalprice());
 		cartService.updateCart(cart);
 	}
 	
@@ -91,37 +96,23 @@ public class CartController {
 	
 	
 	@PostMapping("/deleteCartCheck")
-	public @ResponseBody String deleteCartCheck(HttpServletRequest request,
-									@RequestParam(value="checkBoxArr[]") List<String> checkBoxArr,
-									Cart cart) throws Exception {
-		
-		int result = 0;
-		String checkNum = "";
-		
-		for (String str : checkBoxArr) {
-			result = Integer.parseInt(str);
-			cart.setCart_seq(Long.valueOf(result));
-			cartService.deleteCart(cart);
-		}
-		return "";
-	}
-	
-	
-	/*
-	@PostMapping("/deleteCartCheck")
 	public @ResponseBody void deleteCartCheck(HttpServletRequest request,
-									@RequestParam(value="checkBoxArr[]") List<String> checkBoxArr,
+									@RequestBody Map<String, String[]> map,
+				//					@RequestParam(value="checkBoxArr[]") List<String> checkBoxArr,
 									Cart cart) throws Exception {
 		
-		int result = 0;
-		String checkNum = "";
+		System.out.println("deleteCartCheck()........");
+		int data = 0;
 		
-		for (String str : checkBoxArr) {
-			checkNum = str;
-			cart.setCart_seq(Long.valueOf(checkNum));
+		String[] checkBoxArr = map.get("checkBoxArr");
+		
+		for(String cseq : checkBoxArr) {
+			System.out.println("삭제할 cart_seq="+cseq);
+			data = Integer.parseInt(cseq);
+			cart.setCart_seq(Long.valueOf(data));
 			cartService.deleteCart(cart);
 		}
 	}
-	*/
+	
 }
 

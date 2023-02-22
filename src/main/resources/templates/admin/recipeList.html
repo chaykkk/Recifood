@@ -14,10 +14,10 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-12">
-            <h2>회원 목록</h2>
+            <h2>레시피 목록</h2>
             <ul class="breadcrumb">
               <li class="breadcrumb-item"><a href="home">Home</a></li>
-              <li class="breadcrumb-item active">Members</li>
+              <li class="breadcrumb-item active">Recipe</li>
             </ul>
           </div>
         </div>
@@ -33,15 +33,14 @@
               <!-- 검색창 -->
               <div>
                   <div>
-                      <form th:action="@{/allMemberList}">
+                      <form th:action="@{/allRecipeList}">
                           <table th:align="center" th:cellpadding="5" th:cellspacing="5" th:width="880">
                               <tr>
                                   <td th:align="right">
                                       <select class="nav-link dropdown-toggle arrow" data-toggle="dropdown" name="searchCondition">
                                           <option placeholder="">Category</option>
                                           <option th:value="USERNAME">아이디</option>
-                                          <option th:value="NAME">이름</option>
-                                          <option th:value="EMAIL">이메일</option>
+                                          <option th:value="RECIPE_NAME">레시피명</option>
                                       </select>
                                   </td>
                                   <td th:width="500">
@@ -69,53 +68,59 @@
                 <thead>
                 <tr th:align="center">
                   <th>아이디</th>
-                  <th>이름</th>
-                  <th>핸드폰번호</th>
-                  <th>이메일</th>
-                  <th>등급</th>
-                  <th>가입일</th>
+                  <th>카테고리</th>
+                  <th>레시피명</th>
+                  <th>등록일</th>
+                  <th>추천수</th>
+                  <th>펀딩신청</th>
                 </tr>
                 </thead>
-                <tr th:each="member:${memberList}" th:align="center">
+                <tr th:each="recipe:${recipeList}" th:align="center">
                   <td class="price-pr">
-                    <a th:href="@{/member(username=${member.username})}" th:text="${member.username}"/>
+                    <p th:text="${recipe.member.username}"/>
                   </td>
                   <td class="price-pr">
-                    <p th:text="${member.name}"/>
+                    <p th:text="${recipe.kind}"/>
                   </td>
                   <td class="price-pr">
-                    <p th:text="${member.phone}"/>
+                    <a th:href="@{/getRecipe(recipe_seq=${recipe.recipe_seq})}" th:text="${recipe.recipe_name}"/>
                   </td>
                   <td class="total-pr">
-                    <p th:text="${member.email}"/>
+                    <p th:text="${#dates.format(recipe.regdate, 'yyyy-MM-dd')}"/>
                   </td>
                   <td class="total-pr">
-                    <p th:text="${member.degree}"/>
+                    <p th:text="${recipe.good}"/>
                   </td>
-                  <td class="name-pr">
-                    <p th:text="${#dates.format(member.regdate, 'yyyy-MM-dd')}"/>
-                  </td>
+                  <th:block th:if="${recipe.good} >= 200 and ${recipe.result} == 2">
+                            <td class="remove-pr"><a th:href="@{/insertFunding(recipe_seq=${recipe.recipe_seq})}"><button class="btn btn-theme" type="button" th:text="신청"></button></a></td>
+                            </th:block>
+                             <th:block th:if="${recipe.good} >= 200 and ${recipe.result} == 1">
+                            	<td class="remove-pr"><a th:text="신청완료"></a></td>
+                            </th:block>
+                             <th:block th:if="${recipe.good} < 200 and ${recipe.result} == 2">
+                            	<td class="remove-pr"><a th:text="신청불가능"></a></td>
+                </th:block>
                 </tr>
               </table>
             </div><br><br>
               <!-- 페이징 처리 -->
-            <div th:if="${!memberList.isEmpty()}">
+            <div th:if="${!recipeList.isEmpty()}">
               <ul class="pagination justify-content-center">
-                <li class="page-item" th:classappend="${!memberList.hasPrevious()} ? 'disabled'">
-                  <a class="page-link" th:href="@{allMemberList(page=${memberList.number})}">
+                <li class="page-item" th:classappend="${!recipeList.hasPrevious()} ? 'disabled'">
+                  <a class="page-link" th:href="@{allRecipeList(page=${recipeList.number})}">
                     <span>이전</span>
                   </a>
                 </li>
-                <li th:each="page: ${#numbers.sequence(1, memberList.getTotalPages())}"
-                    th:if="${page >= memberList.number-4 and page <= memberList.number+6}"
-                    th:classappend="${page == memberList.number+1} ? 'active'"
+                <li th:each="page: ${#numbers.sequence(1, recipeList.getTotalPages())}"
+                    th:if="${page >= recipeList.number-4 and page <= recipeList.number+6}"
+                    th:classappend="${page == recipeList.number+1} ? 'active'"
                     class="page-item">
 <!--                  <a th:text="${page}" class="page-link" th:href="@{|?page=${page}|}"></a>-->
-                  <a th:text="${page}" class="page-link" th:href="@{allMemberList(page=${page})}"></a>
+                  <a th:text="${page}" class="page-link" th:href="@{allRecipeList(page=${page})}"></a>
                 </li>
 
-                <li class="page-item" th:classappend="${!memberList.hasNext()} ? 'disabled'">
-                  <a class="page-link" th:href="@{allMemberList(page=${memberList.number+2})}">
+                <li class="page-item" th:classappend="${!recipeList.hasNext()} ? 'disabled'">
+                  <a class="page-link" th:href="@{allRecipeList(page=${recipeList.number+2})}">
                     <span>다음</span>
                   </a>
                 </li>

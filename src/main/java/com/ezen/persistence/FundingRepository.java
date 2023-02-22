@@ -7,12 +7,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
 import com.ezen.entity.Funding;
 
 import jakarta.transaction.Transactional;
 
-public interface FundingRepository extends JpaRepository<Funding, Long> {
+public interface FundingRepository extends JpaRepository<Funding, Long>, QuerydslPredicateExecutor<Funding> {
 	// 전체 펀딩 목록 조회
 	@Query("SELECT fd FROM Funding fd")
 	Page<Funding> getAllFundingList(Funding funding, Pageable pageable);
@@ -64,5 +65,8 @@ public interface FundingRepository extends JpaRepository<Funding, Long> {
 	@Modifying
 	@Query(value="SELECT * FROM (SELECT * FROM funding ORDER BY viewcount DESC) WHERE ROWNUM<4", nativeQuery = true)
 	List<Funding> getBestFundingList(Funding funding);
+	
+	@Query("select fd from Funding fd")
+	Page<Funding> getFundingList(Pageable pageable);
 
 }

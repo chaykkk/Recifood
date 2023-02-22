@@ -54,11 +54,11 @@
                   <td class="price-pr">
                     <a th:href="@{/board(boardSeq=${board.boardSeq})}" th:text="${board.title}"/>
                   </td>
-                  <td class="total-pr">
-                    <p th:text="${board.member?.username}" th:align="center"/>
+                  <td class="total-pr" th:align="center">
+                    <p th:text="${board.member?.username}"/>
                   </td>
-                  <td class="name-pr">
-                    <p th:text="${#dates.format(board.regdate, 'yyyy-MM-dd')}" th:align="center"/>
+                  <td class="name-pr" th:align="center">
+                    <p th:text="${#dates.format(board.regdate, 'yyyy-MM-dd')}"/>
                   </td>
                 </tr>
               </table>

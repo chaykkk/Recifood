@@ -1,18 +1,31 @@
 package com.ezen.controller;
 
-import com.ezen.entity.*;
-import com.ezen.service.FundingService;
-import com.ezen.service.MemberService;
-import com.ezen.service.PurchaseService;
-import jakarta.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.ezen.entity.Cart;
+import com.ezen.entity.Funding;
+import com.ezen.entity.Member;
+import com.ezen.entity.Purchase;
+import com.ezen.entity.Search;
+import com.ezen.service.FundingService;
+import com.ezen.service.MemberService;
+import com.ezen.service.PurchaseService;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class PurchaseController {
@@ -55,7 +68,7 @@ public class PurchaseController {
     }
 
     @PostMapping("/insertPurchase")
-    public @ResponseBody void insertPurchase(@RequestBody Map<String, String> map, Purchase purchase) {
+    public @ResponseBody void insertPurchase(@RequestBody Map<String, String> map, Purchase purchase, Cart cart) {
         System.out.println("주문자 정보: " + map.entrySet());
 
         Funding funding = new Funding();
@@ -82,6 +95,8 @@ public class PurchaseController {
         purchase.setMember(member);
 
         purchaseService.insertPurchase(purchase);
+       // cart.setCart_seq(cart.getCart_seq());
+        //cartService.deleteCart(cart);
     }
 
     @GetMapping("/success")

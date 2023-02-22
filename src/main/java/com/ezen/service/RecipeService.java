@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 
 import com.ezen.entity.Recipe;
 import com.ezen.entity.RecipeProcedure;
+import com.ezen.entity.Search;
 
 public interface RecipeService {
 	void insertRecipe(Recipe recipe, List<RecipeProcedure> listProcedure);
@@ -34,4 +35,6 @@ public interface RecipeService {
 	Page<Recipe> getRecipeListGood(Recipe recipe, int page);
 	
 	List<Recipe> getBestRecipeList(Recipe recipe);
+	
+	Page<Recipe> getRecipeList(int page, Search search);
 }

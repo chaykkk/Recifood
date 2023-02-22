@@ -10,12 +10,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ezen.entity.Funding;
 import com.ezen.entity.Member;
 import com.ezen.entity.Recipe;
+import com.ezen.entity.Search;
 import com.ezen.service.FundingService;
 
 import jakarta.servlet.http.Cookie;
@@ -222,4 +224,19 @@ public class FundingController {
 			return "redirect:myFundingList";
 		}
 	}
+	
+	@RequestMapping("/allFundingList")
+    public String allFundingList(@RequestParam(value = "page", defaultValue = "1") int page, Search search, Model model) {
+        if(search.getSearchCondition() == null) {
+            search.setSearchCondition("USERNAME");
+        }
+        if(search.getSearchKeyword() == null) {
+            search.setSearchKeyword("");
+        }
+        Page<Funding> fundingList = fundingService.getFundingList(page, search);
+
+        model.addAttribute("fundingList", fundingList);
+
+        return "admin/fundingList";
+    }
 }

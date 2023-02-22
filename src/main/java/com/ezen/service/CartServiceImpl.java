@@ -31,6 +31,7 @@ public class CartServiceImpl implements CartService {
 	public void updateCart(Cart cart) {
 		Cart findCart = cartRepo.findById(cart.getCart_seq()).get();
 		findCart.setQuantity(cart.getQuantity());
+		findCart.setTotalprice(cart.getTotalprice());
 		
 		cartRepo.save(findCart);
 	}
@@ -45,7 +46,7 @@ public class CartServiceImpl implements CartService {
 		
 		String sql =
 		  "SELECT 1 AS cd_seq, fd.funding_seq funding_seq, fd.filename filename, fd.funding_name funding_name, fd.price price, " +
-		  "c.cart_seq cart_seq, c.quantity quantity, c.username username, c.regdate regdate " + 
+		  "c.cart_seq cart_seq, c.quantity quantity, c.username username, c.regdate regdate, c.totalprice " + 
 		  "FROM Funding fd, Cart c " +
 		  "WHERE fd.funding_seq=c.funding_seq AND c.username=?";
 

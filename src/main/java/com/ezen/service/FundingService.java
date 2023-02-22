@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 
 import com.ezen.entity.Funding;
+import com.ezen.entity.Search;
 
 public interface FundingService {
 	void insertFunding(Funding funding);
@@ -36,4 +37,6 @@ public interface FundingService {
 	int updateViewCount(Long recipe_seq);
 	
 	List<Funding> getBestFundingList(Funding funding);
+	
+	Page<Funding> getFundingList(int page, Search search);
 }

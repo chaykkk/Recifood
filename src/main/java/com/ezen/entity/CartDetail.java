@@ -31,7 +31,8 @@ import lombok.ToString;
 	                @ColumnResult(name="filename", type = String.class),
 	                @ColumnResult(name="cart_seq", type = Long.class),
 	                @ColumnResult(name="regdate", type = Date.class),
-	                @ColumnResult(name="username", type = String.class)
+	                @ColumnResult(name="username", type = String.class),
+	                @ColumnResult(name="totalprice", type = Integer.class),
 		})
 )
 @Entity // 장바구니 목록 조회용 테이블, 데이터 저장 x
@@ -46,5 +47,5 @@ public class CartDetail {
 	private Long cart_seq;
 	private Date regdate;
 	private String username;
-
+	private int totalprice;
 }

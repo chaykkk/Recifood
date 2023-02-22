@@ -62,7 +62,7 @@
                   <div class="submit-button text-center">
                     <button class="btn hvr-hover" type="submit">수정</button>
                     <button class="btn hvr-hover" type="button" th:onclick="|location.href='@{/deleteBoard(category=${board.category}, boardSeq=${board.boardSeq})}'|">삭제</button>
-                    <button class="btn hvr-hover" type="button" th:onclick="|location.href='@{/boardList}'|">취소</button>
+                    <button class="btn hvr-hover" type="button" th:onclick="history.back()">취소</button>
                   </div>
                 </div>
               </div>

@@ -62,7 +62,7 @@ public class MemberServiceImpl implements MemberService {
 		QMember qMember = QMember.member;
 
 		if(search.getSearchCondition().equals("USERNAME")) {
-			builder.and(qMember.member.username.like("%" + search.getSearchKeyword() + "%"));
+			builder.and(qMember.username.like("%" + search.getSearchKeyword() + "%"));
 		} else if (search.getSearchCondition().equals("NAME")) {
 			builder.and(qMember.name.like("%" + search.getSearchKeyword() + "%"));
 		} else if (search.getSearchCondition().equals("EMAIL")) {
@@ -71,7 +71,7 @@ public class MemberServiceImpl implements MemberService {
 		Pageable pageable = PageRequest.of(page-1, 10, Sort.Direction.DESC, "regdate");
 		return memberRepository.findAll(builder, pageable);
 	}
-
+	
 	@Override
 	public Member findMemberId(String name, String email) {
 		return memberRepository.findMemberId(name, email);

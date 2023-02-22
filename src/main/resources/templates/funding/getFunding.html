@@ -27,6 +27,7 @@
                     <div class="single-product-details">
                     <form th:method="post" th:action="@{/purchase}">
                     <input type="hidden" name="funding_seq" id="funding_seq" th:value="${funding.funding_seq}">
+                    <input type="hidden" name="price" id="price" th:value="${funding.price}">
                         <center><h2 th:text="${funding.funding_name}"></h2><br></center>
                         <center><h5 th:text="${funding.content}"></h5><br><br></center>
                         <center><p class="available-stock"><span>펀딩기간 : </span><span th:text="${#dates.format(funding.startdate, 'yyyy-MM-dd')}"></span>
@@ -81,6 +82,7 @@
 	 
 		 const funding_seq = $("#funding_seq").val();
 		 const username = $("#username").val();
+		 const price = $("#price").val();
 		 
 		 $('#insertCart').on('click', function() {
 			 $.ajax({
@@ -90,7 +92,8 @@
 				data: JSON.stringify({
 					'funding_seq' : funding_seq,
 					'quantity' : $("#quantity").val(),
-					'username': username
+					'username': username,
+					'price' : price
 				}),
 				success: function(data) {
 					alert("장바구니에 추가되었습니다!");

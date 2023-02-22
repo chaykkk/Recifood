@@ -73,7 +73,7 @@
                             </th:block>
                              <th:block th:if="${recipe.good} < 200 and ${recipe.result} == 2">
                             	<td class="remove-pr"><a th:text="신청불가능"></a></td>
-                            </th:block>
+                  </th:block>
                   <td class="remove-pr">
                     <a th:href="@{/deleteRecipe(recipe_seq=${recipe.recipe_seq})}" th:align="center"><i class="fas fa-times"></i></a>
                   </td>

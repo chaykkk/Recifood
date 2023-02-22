@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.ezen.entity.Role.ADMIN;
+
 @Controller
 @Log4j2
 public class BoardController {
@@ -126,5 +128,16 @@ public class BoardController {
         model.addAttribute("category", category);
 
         return "board/freeBoardList";
+    }
+
+    @RequestMapping("/myBoardList")
+    public String getFreeBoardList(@RequestParam(value = "page", defaultValue = "1") int page,
+                                   @SessionAttribute("member") String username, Model model) {
+
+        Page<Board> boardList = boardService.getMyBoardList(page, username);
+        log.info("게시글 목록: " + boardList.getContent());
+        model.addAttribute("boardList", boardList);
+
+        return "board/myBoardList";
     }
 }

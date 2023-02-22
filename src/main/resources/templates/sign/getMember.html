@@ -45,10 +45,12 @@
                           회원등급 <input type="text" class="form-control rounded-left" id="degree" name="degree" th:value="${member.degree}" readonly>
                             <br><br>
                           <div class="form-group d-flex align-items-center">
+                              <div class="w-100 d-flex">
+                                  <button type="button" class="btn btn-primary rounded submit" th:onclick="history.back()">뒤로</button>
+                              </div>
                               <div class="w-100 d-flex justify-content-end" th:if="${session.loginMember.username.equals(member.username)}">
                                   <button type="button" class="btn btn-primary rounded submit" th:onclick="|location.href='@{/updateMember(username=${member.username})}'|">수정</button>&nbsp;&nbsp;
                                   <button type="button" class="btn btn-primary rounded submit" th:onclick="|location.href='@{/deleteMember(username=${member.username})}'|">탈퇴</button>&nbsp;&nbsp;
-                                  <button type="button" class="btn btn-primary rounded submit" th:onclick="|location.href='@{/mypage}'|">뒤로</button>
                               </div>
                           </div>
                       </div>

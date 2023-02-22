@@ -9,10 +9,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.ezen.entity.QRecipe;
 import com.ezen.entity.Recipe;
 import com.ezen.entity.RecipeProcedure;
+import com.ezen.entity.Search;
 import com.ezen.persistence.RecipeProcedureRepository;
 import com.ezen.persistence.RecipeRepository;
+import com.querydsl.core.BooleanBuilder;
 
 @Service
 public class RecipeServiceImpl implements RecipeService {
@@ -104,4 +107,18 @@ public class RecipeServiceImpl implements RecipeService {
 		return recipeRepo.getBestRecipeList(recipe);
 	}
 
+	@Override
+	public Page<Recipe> getRecipeList(int page, Search search) {
+		BooleanBuilder builder = new BooleanBuilder();
+
+		QRecipe qRecipe = QRecipe.recipe;
+
+		if(search.getSearchCondition().equals("USERNAME")) {
+			builder.and(qRecipe.member.username.like("%" + search.getSearchKeyword() + "%"));
+		} else if (search.getSearchCondition().equals("RECIPE_NAME")) {
+			builder.and(qRecipe.recipe_name.like("%" + search.getSearchKeyword() + "%"));
+		}
+		Pageable pageable = PageRequest.of(page-1, 10, Sort.Direction.DESC, "regdate");
+		return recipeRepo.findAll(builder, pageable);
+	}
 }

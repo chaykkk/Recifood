@@ -7,12 +7,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
 import com.ezen.entity.Recipe;
 
 import jakarta.transaction.Transactional;
 
-public interface RecipeRepository extends JpaRepository<Recipe, Long> {
+public interface RecipeRepository extends JpaRepository<Recipe, Long>, QuerydslPredicateExecutor<Recipe> {
 	
 	// 전체 레시피 목록 조회
 	@Query("SELECT r FROM Recipe r")
@@ -44,4 +45,7 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
 	@Modifying
 	@Query(value="SELECT * FROM (SELECT * FROM recipe ORDER BY good DESC) WHERE ROWNUM <4", nativeQuery = true)
 	List<Recipe> getBestRecipeList(Recipe recipe);
+	
+	@Query("select r from Recipe r")
+    Page<Recipe> getRecipeList(Pageable pageable);
 }
