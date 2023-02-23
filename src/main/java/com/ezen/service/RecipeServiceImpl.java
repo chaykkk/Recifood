@@ -57,6 +57,14 @@ public class RecipeServiceImpl implements RecipeService {
 	}
 
 	@Override
+	public void updateGood(Recipe recipe) {
+		Recipe findRecipe = recipeRepo.findById(recipe.getRecipe_seq()).get();
+		findRecipe.setGood(recipe.getGood());
+
+		recipeRepo.save(findRecipe);
+	}
+	
+	@Override
 	public void deleteRecipe(Recipe recipe) {
 		recipeRepo.deleteById(recipe.getRecipe_seq());
 	}

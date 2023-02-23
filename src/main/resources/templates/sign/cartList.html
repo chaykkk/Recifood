@@ -26,7 +26,6 @@
     <!-- End All Title Box -->
     <!-- Start Cart  -->
     <div class="cart-box-main" id="cart">
-    <form th:method="post" th:action="@{/purchase}">
     <input type="hidden" name="username" id="username" th:value="${session.loginMember.username}">
         <div class="container">
             <div class="row">
@@ -42,6 +41,7 @@
                                     <th style="text-align: center; width: 80px">수량</th>
                                     <th style="text-align: center; width: 100px">총금액</th>
                                     <th style="text-align: center">수정</th>
+                                    <th style="text-align: center">결제</th>
                                     <th style="text-align: center">삭제</th>
                                 </tr>
                             </thead>
@@ -66,6 +66,7 @@
 	                                <td class="remove-pr total"><p th:text="|${#numbers.formatInteger(cart.totalprice,0,'COMMA')} 원|" id="sum" name="sum">원
 	                                </td> 
 	                                <td class="remove-pr"><a><button class="update" name="">확인</button></a></td>
+	                                <td class="remove-pr"><a><button class="purchase" name="">결제</button></a></td>
 	                                <td class="remove-pr"><a th:href="@{/deleteCart(cart_seq=${cart.cart_seq})}"><i class="fas fa-times"></i></a></td>
                                 </tr>
                             </tbody>
@@ -75,8 +76,7 @@
             </div>		
             		
                        <button class="btn btn-theme" type="button" onclick="DeleteClick();">선택삭제</button>
-					   
-					   <center><button class="btn hvr-hover" id="insertCart">주문하기</button></center>
+
         </div>
         </form>
     </div>
@@ -90,6 +90,7 @@
 $(document).ready(function() {
 	 const cart_seq = $("#cart_seq").val();
 	 const username = $("#username").val();
+	 const price = $("#price").val();
 	 
 	 
 	 $('.update').on('click', function() {
@@ -123,7 +124,7 @@ $(document).ready(function() {
 	  });
 });
 
-// 수량버튼
+// 수량 +/- 버튼
 $(".fa-plus").on("click", function(){
 	let quantity = $(this).parent("td").find("input").val();
 	$(this).parent("td").find("input").val(++quantity);
@@ -154,6 +155,73 @@ $(".fa-minus").on("click", function(){
 		*/
 	}
 });
+
+//선택삭제
+function DeleteClick() {
+	var checkBoxArr = [];
+	$("input:checkbox[name='checkbox']:checked").each(function() {
+		checkBoxArr.push($(this).val()); // 체크된 것만 배열에 push
+		console.log(checkBoxArr);
+	})
+	
+	$.ajax({
+		type : 'POST',
+		url : '/deleteCartCheck',
+		contentType: 'application/json',
+		data : JSON.stringify({
+			"checkBoxArr" : checkBoxArr
+		}),
+		success: function(data) {
+			alert("선택한 상품이 삭제되었습니다.");
+			location.reload();
+		}, 
+		error : function() {
+			alert("로그인 후 이용가능합니다.");
+		}
+	});
+}
+
+// 주문하기
+$(document).ready(function() {
+	const cart_seq = $("cart_seq").val();
+	const username = $("#username").val();
+	const price = $("#price").val();
+	const quantity = $("#quantity").val();
+	
+	$('.purchase').on('click', function() {
+		 // 해당 줄의 정보 가져오기
+		 var thisRow = $(this).closest('tr');
+		 var cart_seq = thisRow.find('td:eq(0)').find('input').val();
+		 var funding_seq = thisRow.find('td:eq(1)').find('input').val();
+		 var quantity = thisRow.find('td:eq(4)').find('p:eq(0)').find('input').val();
+		 var price = thisRow.find('td:eq(3)').find('input').val();
+		 
+		 $.ajax({
+			type: 'POST',
+			url: '/purchase',
+			contentType: 'application/json',
+			async: false,
+			data: JSON.stringify({
+				'cart_seq' : cart_seq,
+				'funding_seq' : funding_seq,
+				'username': username,
+				'quantity' : quantity,
+				'price' : price
+			}),
+			success: function(data) {
+				insertPurchase();
+			}, 
+			error : function() {
+				alert("로그인 후 이용가능합니다.");
+			}
+		 });
+	  });
+});
+
+function insertPurchase() {
+	window.location.replace("/insertPurchase");
+}
+
 /*
 function removeComma(price) {
 	var result = price.substring(0, price.length-2);
@@ -201,8 +269,8 @@ fn_totalMoney = function() {
 };
 */
 
+/*
 // 전체선택, 해제
-
 $(document).on("click", "input:checkbox[name=checkbox]", function(e) {
 	
 	var chks = document.getElementsByName("checkbox");
@@ -231,36 +299,7 @@ function checkAll() {
 		$("input[name=checkbox]").prop("checked", false);
 	}
 }
-
-
-// 선택삭제
-function DeleteClick() {
-	var checkBoxArr = [];
-	$("input:checkbox[name='checkbox']:checked").each(function() {
-		checkBoxArr.push($(this).val()); // 체크된 것만 배열에 push
-		console.log(checkBoxArr);
-	})
-	
-	$.ajax({
-		type : 'POST',
-		url : '/deleteCartCheck',
-		contentType: 'application/json',
-		data : JSON.stringify({
-			"checkBoxArr" : checkBoxArr
-		}),
-		success: function(data) {
-			alert("선택한 상품이 삭제되었습니다.");
-			location.reload();
-		}, 
-		error : function() {
-			alert("로그인 후 이용가능합니다.");
-		}
-	});
-}
-
-// 주문하기
-
-
+*/
 </script>
 </th:block>
 </html>

@@ -4,6 +4,7 @@
 
 @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700,800');
 @import url('https://fonts.googleapis.com/css?family=Dosis:200,300,400,500,600,700');
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap');
 
 
 /*
@@ -11,6 +12,8 @@
     font-family: 'Poppins', sans-serif;
 
     font-family: 'Dosis', sans-serif;
+
+    font-family: 'Nanum Gothic', sans-serif;
 
 */
 
@@ -35,7 +38,7 @@
  body {
      color: black;
      font-size: 15px;
-     font-family: 'Dosis', sans-serif;
+     font-family: 'Nanum Gothic', sans-serif;
      line-height: 1.80857;
 }
  a {
@@ -1359,7 +1362,6 @@
 }
 .footer-widget, .footer-link, .footer-link-contact{
 	margin-top: 15px;
-	margin-bottom: -80px;
 }
  .footer-widget h4 {
      color: #ffffff;
@@ -2518,7 +2520,7 @@
      margin-bottom: 30px;
 }
  .single-product-details ul li{
-     width: 100%;
+     width: 50%;
      float: left;
      padding: 0px 15px;
 }

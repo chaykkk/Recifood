@@ -93,7 +93,7 @@
                     <p th:text="${purchase.quantity}"/>
                   </td>
                   <td class="total-pr">
-                    <p th:text="${purchase.price}"/>
+                    <p th:text="${#numbers.formatInteger(purchase.price,0,'COMMA')}"/>
                   </td>
                   <td class="name-pr">
                     <p th:text="${#dates.format(purchase.regdate, 'yyyy-MM-dd')}"/>

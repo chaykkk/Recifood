@@ -37,4 +37,7 @@ public interface RecipeService {
 	List<Recipe> getBestRecipeList(Recipe recipe);
 	
 	Page<Recipe> getRecipeList(int page, Search search);
+	
+	// 추천수 추가/삭제
+	void updateGood(Recipe recipe);
 }
