@@ -1,31 +1,20 @@
 package com.ezen.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.ezen.entity.Search;
+import com.ezen.entity.*;
+import com.ezen.service.CartService;
+import com.ezen.service.FundingService;
+import com.ezen.service.MemberService;
+import com.ezen.service.PurchaseService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.*;
 
-import com.ezen.entity.Cart;
-import com.ezen.entity.Funding;
-import com.ezen.entity.Member;
-import com.ezen.entity.Purchase;
-import com.ezen.entity.Search;
-import com.ezen.service.FundingService;
-import com.ezen.service.MemberService;
-import com.ezen.service.PurchaseService;
-
-import jakarta.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 public class PurchaseController {
@@ -36,10 +25,12 @@ public class PurchaseController {
     private MemberService memberService;
     @Autowired
     private FundingService fundingService;
+    @Autowired
+    private CartService cartService;
 
-    @PostMapping("/purchase")
-    public String insertPurchaseForm(Funding funding, @RequestParam("quantity") int quantity,
-                                     Model model, HttpSession session) {
+    @PostMapping("/fundingPurchase") // 상품페이지 결제
+    public String fundingPurchaseForm(Funding funding, @RequestParam("quantity") int quantity,
+                                      Model model, HttpSession session) {
 
         Member loginMember = (Member) session.getAttribute("loginMember");
 
@@ -67,17 +58,84 @@ public class PurchaseController {
         }
     }
 
-    @PostMapping("/insertPurchase")
-    public @ResponseBody void insertPurchase(@RequestBody Map<String, String> map, Purchase purchase, Cart cart) {
-        System.out.println("주문자 정보: " + map.entrySet());
+    @GetMapping("/cartPurchase")
+    public String cartPurchaseView(HttpSession session, Model model,
+                                   @RequestParam("cart_seq") Long cart_seq,
+                                   @RequestParam("funding_seq") Long funding_seq,
+                                   @RequestParam("quantity") int quantity) {
 
+        Member loginMember = (Member) session.getAttribute("loginMember");
+
+        if(loginMember == null) {
+            return "sign/login";
+        } else {
+
+            Map<String, String> addrMap = new HashMap<>();
+            String[] addressArr = null;
+
+            Funding funding = new Funding();
+            funding.setFunding_seq(funding_seq);
+            Funding findFunding = fundingService.getFunding(funding);
+            Member findMember = memberService.getMember(loginMember);
+            addressArr = findMember.getAddress().split(",");
+
+            addrMap.put("addr1", addressArr[0]);
+            addrMap.put("addr2", addressArr[1]);
+            addrMap.put("addr3", addressArr[2]);
+
+            model.addAttribute("funding", findFunding);
+            model.addAttribute("cart_seq", cart_seq);
+            model.addAttribute("quantity", quantity);
+            model.addAttribute("member", findMember);
+            model.addAttribute("address", addrMap);
+
+            return "purchase/insertPurchase";
+        }
+    }
+
+    /*
+    @PostMapping("/cartPurchase") // 장바구니 결제
+    public ModelAndView cartPurchase(@RequestBody Map<String, String> map, HttpSession session, ModelAndView modelAndView) {
+
+        Member loginMember = (Member) session.getAttribute("loginMember");
+
+        Map<String, String> addrMap = new HashMap<>();
+        String[] addressArr = null;
+
+        Member findMember = memberService.getMember(loginMember);
+        addressArr = findMember.getAddress().split(",");
+
+        addrMap.put("addr1", addressArr[0]);
+        addrMap.put("addr2", addressArr[1]);
+        addrMap.put("addr3", addressArr[2]);
+
+        Funding funding = new Funding();
+        funding.setFunding_seq(Long.valueOf(map.get("funding_seq")));
+        Funding findFunding = fundingService.getFunding(funding);
+        System.out.println("찾은 펀딩: " + findFunding);
+
+        modelAndView.addObject("member", findMember);
+        modelAndView.addObject("address", addrMap);
+        modelAndView.addObject("funding", findFunding);
+        modelAndView.addObject("cart_seq", map.get("cart_seq"));
+        modelAndView.addObject("quantity", Integer.valueOf(map.get("quantity")));
+        modelAndView.setViewName("purchase/insertPurchase");
+
+        return modelAndView;
+    }
+*/
+    @PostMapping("/insertPurchase")
+    public @ResponseBody void insertPurchase(@RequestBody Map<String, String> map, Purchase purchase) {
         Funding funding = new Funding();
         funding.setFunding_seq(Long.valueOf(map.get("funding_seq")));
         Member member = new Member();
         member.setUsername(map.get("username"));
 
-        System.out.println("펀딩: " + funding);
-        System.out.println("멤버: " + member);
+        if(map.get("cart_seq") != null) {
+            Cart cart = new Cart();
+            cart.setCart_seq(Long.valueOf(map.get("cart_seq")));
+            cartService.deleteCart(cart);
+        }
 
         purchase.setName(map.get("name"));
         purchase.setPhone(map.get("phone"));
@@ -95,14 +153,10 @@ public class PurchaseController {
         purchase.setMember(member);
 
         purchaseService.insertPurchase(purchase);
-       // cart.setCart_seq(cart.getCart_seq());
-        //cartService.deleteCart(cart);
     }
 
     @GetMapping("/success")
     public String successPurchase(@ModelAttribute("purchase") Purchase purchase, Model model) {
-
-        System.out.println("결제 주문번호: " + purchase);
         model.addAttribute("purchase", purchase);
 
         return "purchase/successPurchase";
@@ -132,7 +186,7 @@ public class PurchaseController {
         if(search.getSearchKeyword() == null) {
             search.setSearchKeyword("");
         }
-        System.out.println("검색어" + search);
+
         Page<Purchase> purchaseList = purchaseService.getPurchaseList(page, search);
 
         model.addAttribute("purchaseList", purchaseList);

@@ -17,7 +17,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-6 text-center mb-5">
-                <h2 class="heading-section">Welcome Recifood</h2>
+                <h2 class="heading-section">Welcome to Recifood</h2>
             </div>
         </div>
         <div class="row justify-content-center">
@@ -31,15 +31,21 @@
                     <form class="login-form" method="post" th:action="@{/login}">
                         <div class="form-group">
                             <div class="icon d-flex align-items-center justify-content-center"><span class="fa fa-user"></span></div>
-                            <input type="text" id="username" name="username" class="form-control rounded-left" th:value="admin123" placeholder="아이디">
+                            <input type="text" id="username" name="username" class="form-control rounded-left" placeholder="아이디">
                         </div>
                         <div class="form-group">
                             <div class="icon d-flex align-items-center justify-content-center"><span class="fa fa-lock"></span></div>
-                            <input type="password" id="password" name="password" class="form-control rounded-left" th:value="admin123123" placeholder="비밀번호">
+                            <input type="password" id="password" name="password" class="form-control rounded-left" placeholder="비밀번호">
                         </div>
                         <div class="form-group d-flex align-items-center">
+                            <div class="w-100">
+                                <label class="checkbox-wrap checkbox-primary mb-0">아이디 저장
+                                    <input type="checkbox" id="saveId">
+                                    <span class="checkmark"></span>
+                                </label>
+                            </div>
                             <div class="w-100 d-flex justify-content-end">
-                                <button type="submit" class="btn btn-primary rounded submit">Login</button>
+                                <button type="submit" id="login" class="btn btn-primary rounded submit">Login</button>
                             </div>
                         </div>
                         <div class="form-group mt-4">
@@ -59,6 +65,35 @@
 <script src="login/js/popper.js"></script>
 <script src="login/js/bootstrap.min.js"></script>
 <script src="login/js/main.js"></script>
+<script src="login/js/jquery.cookie.js"></script>
+<script>
+    $(document).ready(function(){
+        var saveUsername = $.cookie("saveUsername");
+        $("#username").val(saveUsername);
 
+        if($("#username").val() != '') {
+            $("#saveId").attr("checked", true);
+        }
+
+        $("#saveId").keyup(function(){
+            if($("#saveId").is(":checked")) {
+                const saveUsername = $("#username").val();
+                $.cookie("saveUsername", saveUsername, {expires: 30, path: '/'});
+            } else {
+                $.removeCookie("saveUsername");
+            }
+        });
+
+        $("#saveId").change(function (){
+            if($("#saveId").is(":checked")) {
+                const saveUsername = $("#username").val();
+                $.cookie("saveUsername", saveUsername, {expires: 30, path: '/'});
+            } else {
+                $.removeCookie("saveUsername");
+            }
+        });
+
+    });
+</script>
 </body>
 </html>

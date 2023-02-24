@@ -10,8 +10,6 @@ public interface MemberService {
 	void insertMember(Member member); // 회원 가입
 	
 	void updateMember(Member member); // 회원 수정
-
-	void updatePassword(String username, String tempPwd); // 임시 비밀번호 변경
 	
 	void deleteMember(Member member); // 회원 탈퇴
 	
@@ -19,11 +17,13 @@ public interface MemberService {
 
 	Page<Member> getMemberList(int page, Search search);
 
-	Member findMemberId(String name, String email);
+	Member findMemberId(String name, String email); // 아이디 찾기
 
-	Member findMemberPwd(String username, String email);
+	Member findMemberPwd(String username, String email); // 비밀번호 찾기
+ 
+	Email sendEmailAndChangePassword(String memberEmail); // 임시비밀번호 생성 및 저장
+	
+	void updatePassword(String username, String tempPwd); // 임시비밀번호로 업데이트
 
-	Email sendEmailAndChangePassword(String memberEmail);
-
-	void sendEmail(Email email);
+	void sendEmail(Email email); // 이메일 전송
 }

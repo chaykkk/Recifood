@@ -46,17 +46,6 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public void updatePassword(String tempPwd, String memberEmail) {
-
-		String newPassword = tempPwd;
-		Member findMember = memberRepository.findEmailMember(memberEmail);
-
-		findMember.setPassword(newPassword);
-
-		memberRepository.save(findMember);
-	}
-
-	@Override
 	public void deleteMember(Member member) {
 		memberRepository.deleteById(member.getUsername());
 	}
@@ -79,7 +68,7 @@ public class MemberServiceImpl implements MemberService {
 		QMember qMember = QMember.member;
 
 		if(search.getSearchCondition().equals("USERNAME")) {
-			builder.and(qMember.member.username.like("%" + search.getSearchKeyword() + "%"));
+			builder.and(qMember.username.like("%" + search.getSearchKeyword() + "%"));
 		} else if (search.getSearchCondition().equals("NAME")) {
 			builder.and(qMember.name.like("%" + search.getSearchKeyword() + "%"));
 		} else if (search.getSearchCondition().equals("EMAIL")) {
@@ -99,9 +88,10 @@ public class MemberServiceImpl implements MemberService {
 		return memberRepository.findMemberPwd(username, email);
 	}
 
+	// 메일 내용 생성 및 임시비밀번호로 회원비밀번호 변경
 	@Override
 	public Email sendEmailAndChangePassword(String memberEmail) {
-		String tempPwd = UUID.randomUUID().toString().replace("-", "");
+		String tempPwd = UUID.randomUUID().toString().replace("-", ""); // 랜덤으로 임시비밀번호 생성
 		tempPwd = tempPwd.substring(0, 10);
 
 		Email email = new Email();
@@ -110,10 +100,23 @@ public class MemberServiceImpl implements MemberService {
 		email.setMessage("Recifood에서 요청하신 임시 비밀번호는" + tempPwd + "입니다." +
 				"임시비밀번호로 로그인 후에는 반드시 새로운 비밀번호로  변경해 주시기 바랍니다.");
 
-		updatePassword(tempPwd, memberEmail);
+		updatePassword(tempPwd, memberEmail); // 임시 비밀번호로 회원정보 변경
 		return email;
 	}
+	
+	// 임시비밀번호로 비밀번호 변경
+	@Override
+	public void updatePassword(String tempPwd, String memberEmail) {
 
+		String newPassword = tempPwd;
+		Member findMember = memberRepository.findEmailMember(memberEmail); // 멤버 이메일을 찾고
+
+		findMember.setPassword(newPassword); // 해당 이메일을 가진 멤버 비밀번호를 임시비밀번호로 변경
+
+		memberRepository.save(findMember);
+	}
+	
+	// 이메일 보내기
 	@Override
 	public void sendEmail(Email email) {
 		SimpleMailMessage mailMessage = new SimpleMailMessage();
@@ -125,6 +128,5 @@ public class MemberServiceImpl implements MemberService {
 		mailMessage.setReplyTo("recifood@naver.com");
 		javaMailSender.send(mailMessage);
 	}
-
-
+	
 }

@@ -150,6 +150,7 @@
                                 <div class="rounded p-2 bg-light">
                                     <div class="media mb-2">
                                         <div class="media-body"><p th:text="${funding.funding_name}"/>
+                                            <input type="hidden" name="cart_seq" id="cart_seq" th:if="${cart_seq != null}" th:value="${cart_seq}">
                                             <input type="hidden" class="form-control" id="funding_seq" name="funding_seq" th:value="${funding.funding_seq}">
                                             <input type="hidden" class="form-control" id="funding_name" name="funding_name" th:value="${funding.funding_name}">
                                             <input type="hidden" class="form-control" id="quantity" name="quantity" th:value="${quantity}">
@@ -242,8 +243,8 @@
         $('input[type="radio"][name="paymentMethod"]').on('click', function(){
             switch (this.id){
                 case "kakaopay":
-                    $('#inputPayer').hide();
-                    $('#requestPay2').hide();
+                    $('#inputPayer').hide(); // 입금자명
+                    $('#requestPay2').hide(); // 결제버튼
                     $('#requestPay').show();
                     break;
                 case "deposit":
@@ -324,6 +325,7 @@
                 const funding_seq = $("#funding_seq").val();
                 const funding_amount = $("#funding_amount").val();
                 const funding_name = $("#funding_name").val();
+                const cart_seq = $("#cart_seq").val();
                 const username = $("#username").val();
                 const quantity = $("#quantity").val();
                 const name = $("#name").val();
@@ -367,6 +369,7 @@
                                 'funding_seq' : funding_seq,
                                 'funding_name' : funding_name,
                                 'purchase_uid' : rsp.merchant_uid,
+                                'cart_seq' : cart_seq,
                                 'quantity' : quantity,
                                 'price' : funding_amount,
                                 'username' : username,
@@ -425,6 +428,7 @@
                 const funding_seq = $("#funding_seq").val();
                 const funding_amount = $("#funding_amount").val();
                 const funding_name = $("#funding_name").val();
+                const cart_seq = $("#cart_seq").val();
                 const username = $("#username").val();
                 const quantity = $("#quantity").val();
                 const name = $("#name").val();
@@ -459,6 +463,7 @@
                         'funding_seq': funding_seq,
                         'funding_name': funding_name,
                         'purchase_uid': 'recifood_' + new Date().getTime(),
+                        'cart_seq' : cart_seq,
                         'quantity': quantity,
                         'price': funding_amount,
                         'username': username,

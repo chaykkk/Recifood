@@ -26,7 +26,7 @@ public class RecipeRepositoryTest {
 
 			Recipe recipe = new Recipe();
 			Member member = new Member();
-			member.setUsername("member11");
+			member.setUsername("member2");
 
 			recipe.setRecipe_name("레시피"+i);
 			recipe.setContent("설명"+i);
@@ -45,7 +45,7 @@ public class RecipeRepositoryTest {
 
 			Recipe recipe = new Recipe();
 			Member member = new Member();
-			member.setUsername("member11");
+			member.setUsername("member2");
 
 			recipe.setRecipe_name("레시피"+i);
 			recipe.setContent("설명"+i);
@@ -64,7 +64,7 @@ public class RecipeRepositoryTest {
 
 			Recipe recipe = new Recipe();
 			Member member = new Member();
-			member.setUsername("member11");
+			member.setUsername("member2");
 
 			recipe.setRecipe_name("레시피"+i);
 			recipe.setContent("설명"+i);

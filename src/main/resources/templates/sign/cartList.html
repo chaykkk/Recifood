@@ -46,9 +46,10 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr th:each="cart : ${cartList}">
+                                <tr th:each="cart, status : ${cartList}">
+                                    <form th:id="cartItem">
 	                                <td class="thumbnail-img">
-	                                <center><input name = "checkbox" type="checkbox" id="cart_seq" th:value="${cart.cart_seq}"></center>
+	                                <center><input name = "checkbox" type="checkbox" id="cart_seq1" th:value="${cart.cart_seq}"></center>
 	                                <input type="hidden" name="cart_seq" id="cart_seq" th:value="${cart.cart_seq}">
 	                                </td>
 	                                <td class="thumbnail-img"><a th:href="@{/getFunding(funding_seq=${cart.funding_seq})}"><img class="img-fluid" style="width:250px; height:200px" th:src="@{/image/}+ ${cart.filename}"/></a>
@@ -66,8 +67,9 @@
 	                                <td class="remove-pr total"><p th:text="|${#numbers.formatInteger(cart.totalprice,0,'COMMA')} 원|" id="sum" name="sum">원
 	                                </td> 
 	                                <td class="remove-pr"><a><button class="update" name="">확인</button></a></td>
-	                                <td class="remove-pr"><a><button class="purchase" name="">결제</button></a></td>
+	                                <td class="remove-pr"><a><button th:type="button" id="purchase" onclick="purchase_click(this)" class="purchase" name="">결제</button></a></td>
 	                                <td class="remove-pr"><a th:href="@{/deleteCart(cart_seq=${cart.cart_seq})}"><i class="fas fa-times"></i></a></td>
+                                    </form>
                                 </tr>
                             </tbody>
                         </table>
@@ -78,7 +80,6 @@
                        <button class="btn btn-theme" type="button" onclick="DeleteClick();">선택삭제</button>
 
         </div>
-        </form>
     </div>
     <!-- End Cart -->
 </th:block>
@@ -115,7 +116,7 @@ $(document).ready(function() {
 			}),
 			success: function(data) {
 				alert("수량이 변경되었습니다.");
-				location.reload();
+                document.location.href = "/cartList";
 			}, 
 			error : function() {
 				alert("로그인 후 이용가능합니다.");
@@ -182,44 +183,79 @@ function DeleteClick() {
 }
 
 // 주문하기
+function purchase_click(element) {
+    var tr = element.closest('tr');
+    //var parent = button.parentNode;
+    var cart_seq = $(tr).find('td:eq(0)').find('input').val();
+    var funding_seq = $(tr).find('td:eq(1)').find('input').val();
+    var quantity = $(tr).find('td:eq(4)').find('input').val();
+    /*
+    console.log("cart_seq=", cart_seq);
+    console.log("funding_seq=", funding_seq);
+    console.log("quantity=", quantity);
+    */
+
+    //form
+    var theForm = document.createElement('form');      // form생성
+
+    theForm.setAttribute('method','get');                    // method 설정
+    theForm.setAttribute('action','cartPurchase');       // action 설정
+
+    document.body.appendChild(theForm);                     //body 태그에 append 폼 추가
+
+    //input
+    var input_cseq = document.createElement('input');
+    input_cseq.setAttribute('type', 'hidden');
+    input_cseq.setAttribute('name', 'cart_seq');      //name 속성 지정
+    input_cseq.setAttribute('value', cart_seq);        //value 값 설정
+    theForm.appendChild(input_cseq);
+
+    var input_funding_seq = document.createElement('input');
+    input_funding_seq.setAttribute('type', 'hidden');
+    input_funding_seq.setAttribute('name', 'funding_seq');      //name 속성 지정
+    input_funding_seq.setAttribute('value', funding_seq);        //value 값 설정
+    theForm.appendChild(input_funding_seq);
+
+    var input_quantity = document.createElement('input');
+    input_quantity.setAttribute('type', 'hidden');
+    input_quantity.setAttribute('name', 'quantity');      //name 속성 지정
+    input_quantity.setAttribute('value', quantity);        //value 값 설정
+    theForm.appendChild(input_quantity);
+
+    theForm.submit();
+}
+/*
 $(document).ready(function() {
-	const cart_seq = $("cart_seq").val();
-	const username = $("#username").val();
-	const price = $("#price").val();
-	const quantity = $("#quantity").val();
-	
-	$('.purchase').on('click', function() {
+
+	$('#purchase').on('click', function() {
 		 // 해당 줄의 정보 가져오기
 		 var thisRow = $(this).closest('tr');
 		 var cart_seq = thisRow.find('td:eq(0)').find('input').val();
 		 var funding_seq = thisRow.find('td:eq(1)').find('input').val();
 		 var quantity = thisRow.find('td:eq(4)').find('p:eq(0)').find('input').val();
-		 var price = thisRow.find('td:eq(3)').find('input').val();
 		 
 		 $.ajax({
 			type: 'POST',
-			url: '/purchase',
+			url: '/cartPurchase',
 			contentType: 'application/json',
 			async: false,
 			data: JSON.stringify({
 				'cart_seq' : cart_seq,
 				'funding_seq' : funding_seq,
-				'username': username,
 				'quantity' : quantity,
-				'price' : price
 			}),
 			success: function(data) {
-				insertPurchase();
+                console.log("정보 불러오기 성공");
 			}, 
 			error : function() {
-				alert("로그인 후 이용가능합니다.");
+				console.log("정보 불러오기 실패");
 			}
 		 });
 	  });
 });
-
+*/
 function insertPurchase() {
-	window.location.replace("/insertPurchase");
+	window.location.replace("/cartPurchase");
 }
 
 /*

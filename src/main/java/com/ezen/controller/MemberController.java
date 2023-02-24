@@ -88,8 +88,6 @@ public class MemberController {
     @PostMapping("/join")
     public String join(@Valid @ModelAttribute("member") Member member,
                        BindingResult result) {
-        // username 중복 확인
-        String username = member.getUsername();
 
         Optional<Member> memberId = memberRepository.findById(member.getUsername());
 
@@ -182,24 +180,25 @@ public class MemberController {
         log.info("아이디 찾기: " + memberId);
 
         if(memberId == null) {
-            model.addAttribute("find", 0);
+            model.addAttribute("find", 0); // 아이디 없음
         } else {
-            model.addAttribute("find", 1);
+            model.addAttribute("find", 1); // 아이디 있음
             model.addAttribute("member", memberId);
         }
         return "/sign/findId";
     }
 
+    // 이메일 보내기
     @PostMapping("/sendEmail")
     public String findPwdAndSendEmail(@RequestParam("email") String memberEmail, Member member, Model model) {
         Member memberPwd = memberService.findMemberPwd(member.getUsername(), member.getEmail());
 
         if(memberPwd == null) {
-            model.addAttribute("find", 0);
+            model.addAttribute("find", 0); /// 비밀번호 없음
         } else {
-            Email email = memberService.sendEmailAndChangePassword(memberEmail);
-            memberService.sendEmail(email);
-            model.addAttribute("find", 1);
+        	model.addAttribute("find", 1); // 비밀번호 있음
+            Email email = memberService.sendEmailAndChangePassword(memberEmail); // 임시비밀번호 생성 및 저장
+            memberService.sendEmail(email); // 이메일로 임시비밀번호 발송
         }
         return "sign/findPwd";
     }

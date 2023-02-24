@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.ezen.entity.Role.ADMIN;
-
 @Controller
 @Log4j2
 public class BoardController {
@@ -79,11 +77,10 @@ public class BoardController {
     @PostMapping("/updateBoard")
     public String updateBoard(Board board) {
 
-        if(board.getCategory().equals(1)) {
+        if(board.getCategory().toString().equals("1")) {
             boardService.updateBoard(board);
             return "redirect:/boardList?category=1";
         } else {
-            board.setCategory("2");
             boardService.updateBoard(board);
             return "redirect:/boardList?category=2";
         }

@@ -23,7 +23,6 @@ import com.ezen.entity.Recipe;
 import com.ezen.entity.RecipeProcedure;
 import com.ezen.entity.RecipeReply;
 import com.ezen.entity.Search;
-import com.ezen.persistence.HeartRepository;
 import com.ezen.service.HeartService;
 import com.ezen.service.RecipeProcedureService;
 import com.ezen.service.RecipeReplyService;
@@ -39,8 +38,6 @@ public class RecipeController {
 	private RecipeReplyService recipeReplyService;
 	@Autowired
 	private HeartService heartService;
-	@Autowired
-	private HeartRepository heartRepository;
 	@Autowired
 	private RecipeProcedureService recipeProcedureService;
 	
@@ -80,7 +77,6 @@ public class RecipeController {
 		Recipe rp = recipeService.getRecipe(recipe);
 		recipeReply.setRecipe(rp);
 		List<RecipeReply> rrp = recipeReplyService.getRecipeReplyList(recipeReply);
-		rp.setGood(heartRepository.totalHeart(rp.getRecipe_seq())); // 레시피 추천수
 		//recipeReplyService.replyCount(recipeReply.getRecipe().getRecipe_seq());
 		model.addAttribute("recipe", rp);
 		model.addAttribute("recipeReply", rrp);

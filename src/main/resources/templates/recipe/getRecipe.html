@@ -35,7 +35,7 @@
     	<input th:type="hidden" id="good" name="good" th:value="${recipe.good}">
         <input th:type="hidden" id="username" name="username" th:if="${session.loginMember != null}" th:value="${session.loginMember.username}">
         <input th:type="hidden" id="heart" name="heart" th:value="${heart}">
-        <center><div class="single-post__hero set-bg" style="height: 500px;"><img th:src="@{/image/}+ ${recipe.filename}"></div></center>
+        <center><div class="single-post__hero set-bg" ><img style="width: 800px; height: 500px" th:src="@{/image/}+ ${recipe.filename}"></div></center>
         <div class="container">
             <div class="row d-flex justify-content-center">
                 <div class="col-lg-8">
