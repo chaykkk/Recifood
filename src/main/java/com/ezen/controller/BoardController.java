@@ -91,7 +91,7 @@ public class BoardController {
         log.info(board.getBoardSeq() + "번째 게시글 삭제");
         log.info(board.getCategory());
 
-        if(board.getCategory().equals(1)) {
+        if(board.getCategory().toString().equals("1")) {
             boardService.deleteBoard(board);
             return "redirect:/boardList?category=1";
         } else {
